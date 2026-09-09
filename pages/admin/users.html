@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - FAMS Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="fas fa-graduation-cap me-2"></i>FAMS Admin
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> Admin
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item text-danger" href="../auth/login.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="dashboard.html">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="users.html">
+                                <i class="fas fa-users"></i> Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="institutions.html">
+                                <i class="fas fa-university"></i> Institutions
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="specializations.html">
+                                <i class="fas fa-tag"></i> Specializations
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="companies.html">
+                                <i class="fas fa-building"></i> Companies
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="application-windows.html">
+                                <i class="fas fa-calendar-alt"></i> Application Windows
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Manage Users</h1>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                        <i class="fas fa-plus me-2"></i>Add User
+                    </button>
+                </div>
+
+                <!-- Search -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control table-search" data-table="usersTable" placeholder="Search users...">
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <select class="form-select form-select-sm d-inline-block w-auto">
+                            <option>All Roles</option>
+                            <option>Student</option>
+                            <option>Head of Department (HOD)</option>
+                            <option>Secretary</option>
+                            <option>Organization Supervisor</option>
+                            <option>Administrator</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Users Table -->
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="usersTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody">
+                                    <tr>
+                                        <td><strong>Alex Johnson</strong></td>
+                                        <td>alex.johnson@student.edu</td>
+                                        <td><span class="badge bg-primary">Student</span></td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('Alex Johnson')"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Dr. Sarah Mbeki</strong></td>
+                                        <td>sarah.mbeki@fams.edu</td>
+                                        <td><span class="badge bg-info">Head of Department (HOD)</span></td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('Dr. Sarah Mbeki')"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Mr. James Mwangi</strong></td>
+                                        <td>james.mwangi@fams.edu</td>
+                                        <td><span class="badge bg-warning">Secretary</span></td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('Mr. James Mwangi')"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>Add User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="userForm">
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" name="full_name" class="form-control" placeholder="Enter full name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" placeholder="Enter email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Role</label>
+                            <select class="form-select" name="role_id" id="userRole" required><option value="">Loading roles…</option></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control" placeholder="At least 8 characters" minlength="8" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="userForm" class="btn btn-primary">Add User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const body = document.getElementById('usersTableBody');
+            const form = document.getElementById('userForm');
+            const roleSelect = document.getElementById('userRole');
+            const escape = function(value) { const node = document.createElement('span'); node.textContent = value || ''; return node.innerHTML; };
+            const load = function() { fetch('../../api/admin-data.php?resource=users')
+                .then(function(response) { return response.json().then(function(data) { if (!response.ok) throw new Error(data.error || 'Unable to load users.'); return data; }); })
+                .then(function(data) {
+                    body.innerHTML = data.items.map(function(item) {
+                        const active = item.status === 'active';
+                        const nextStatus = active ? 'suspended' : 'active';
+                        const label = active ? 'Suspend' : 'Activate';
+                        return '<tr><td><strong>' + escape(item.full_name) + '</strong></td><td>' + escape(item.email) + '</td><td><span class="badge bg-primary">' + escape(item.roles || 'No role') + '</span></td><td><span class="badge bg-' + (active ? 'success' : 'secondary') + '">' + escape(item.status) + '</span></td><td><button class="btn btn-sm btn-outline-secondary user-status" data-id="' + item.id + '" data-status="' + nextStatus + '">' + label + '</button></td></tr>';
+                    }).join('') || '<tr><td colspan="5" class="text-center text-muted py-4">No users found.</td></tr>';
+                })
+                .catch(function() { body.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-4">Unable to load users.</td></tr>'; }); };
+            fetch('../../api/admin-data.php?resource=roles').then(function(response) { return response.json(); }).then(function(data) { roleSelect.innerHTML = '<option value="">Select role</option>' + data.items.map(function(role) { return '<option value="' + role.id + '">' + escape(role.name) + '</option>'; }).join(''); });
+            form.addEventListener('submit', function(event) { event.preventDefault(); if (!form.checkValidity()) { form.classList.add('was-validated'); return; } fetch('../../api/admin-data.php?resource=users', { method: 'POST', body: new URLSearchParams(new FormData(form)) }).then(function(response) { return response.json().then(function(data) { if (!response.ok) throw new Error(data.error); return data; }); }).then(function(data) { bootstrap.Modal.getInstance(document.getElementById('addUserModal')).hide(); form.reset(); showToast(data.message, 'success'); load(); }).catch(function(error) { showToast(error.message, 'danger'); }); });
+            body.addEventListener('click', function(event) { const button = event.target.closest('.user-status'); if (!button) return; fetch('../../api/admin-data.php?resource=users', { method: 'POST', body: new URLSearchParams({ action: 'set_status', user_id: button.dataset.id, status: button.dataset.status }) }).then(function(response) { return response.json().then(function(data) { if (!response.ok) throw new Error(data.error); return data; }); }).then(function(data) { showToast(data.message, 'success'); load(); }).catch(function(error) { showToast(error.message, 'danger'); }); });
+            load();
+        });
+        function confirmDelete(name) {
+            if (confirm('Are you sure you want to delete user: ' + name + '?')) {
+                showToast('User ' + name + ' deleted!', 'danger');
+            }
+        }
+    </script>
+</body>
+</html>

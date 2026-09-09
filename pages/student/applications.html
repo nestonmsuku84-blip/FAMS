@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications - FAMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="fas fa-graduation-cap me-2"></i>FAMS
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> <span class="student-user-name">Student Account</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item text-danger" href="../auth/login.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="dashboard.html">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="applications.html">
+                                <i class="fas fa-file-alt"></i> My Applications
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="application-form.html">
+                                <i class="fas fa-plus-circle"></i> New Application
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="placement.html">
+                                <i class="fas fa-briefcase"></i> My Placement
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">My Applications</h1>
+                    <div class="float-right">
+                        <a href="application-form.html" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>New Application
+                        </a>
+                        <a href="dashboard.html" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                        </a>
+                    </div>
+                    <a href="application-form.html" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>New Application
+                    </a>
+                </div>
+
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>Specialization</th>
+                                        <th>Submitted</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="applicationsTableBody"><tr><td colspan="5" class="text-center text-muted py-4">Loading applications…</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const body = document.getElementById('applicationsTableBody');
+            const escapeHtml = function(value) { const element = document.createElement('div'); element.textContent = value || ''; return element.innerHTML; };
+            try {
+                const response = await fetch('../../api/application-data.php');
+                if (!response.ok) throw new Error('Applications unavailable');
+                const data = await response.json();
+                if (!data.applications.length) {
+                    body.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-4">You have not submitted an application yet.</td></tr>';
+                    return;
+                }
+                body.innerHTML = data.applications.map(function(app) {
+                    const date = app.submitted_at || app.created_at;
+                    const status = app.status.replace(/_/g, ' ');
+                    return '<tr><td><strong>' + escapeHtml(app.reference_number) + '</strong></td><td>' + escapeHtml(app.specialization_name || 'Not selected') + '</td><td>' + new Date(date.replace(' ', 'T')).toLocaleDateString() + '</td><td><span class="badge bg-secondary text-capitalize">' + escapeHtml(status) + '</span></td><td><a href="application-detail.html?id=' + app.id + '" class="btn btn-sm btn-outline-primary" aria-label="View application"><i class="fas fa-eye"></i></a></td></tr>';
+                }).join('');
+            } catch (error) {
+                body.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-4">Unable to load applications.</td></tr>';
+            }
+        });
+    </script>
+</body>
+</html>

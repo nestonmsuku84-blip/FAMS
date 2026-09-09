@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Institutions - FAMS Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="fas fa-graduation-cap me-2"></i>FAMS Admin
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> Admin
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item text-danger" href="../auth/login.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="dashboard.html">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="users.html">
+                                <i class="fas fa-users"></i> Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="institutions.html">
+                                <i class="fas fa-university"></i> Institutions
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="specializations.html">
+                                <i class="fas fa-tag"></i> Specializations
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="companies.html">
+                                <i class="fas fa-building"></i> Companies
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="application-windows.html">
+                                <i class="fas fa-calendar-alt"></i> Application Windows
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Manage Institutions</h1>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addInstitutionModal">
+                        <i class="fas fa-plus me-2"></i>Add Institution
+                    </button>
+                </div>
+
+                <div class="row g-4" id="institutionsList">
+                    <!-- Institution Cards -->
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-university text-primary me-2"></i>
+                                    University of Dar es Salaam
+                                </h5>
+                                <p class="card-text">
+                                    <span class="badge bg-success">Active</span>
+                                    <span class="badge bg-info">5 Programmes</span>
+                                </p>
+                                <p class="text-muted small">
+                                    <i class="fas fa-envelope me-1"></i> info@udsm.ac.tz<br>
+                                    <i class="fas fa-phone me-1"></i> +255 222 123 456
+                                </p>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i> Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-university text-primary me-2"></i>
+                                    Arusha Technical College
+                                </h5>
+                                <p class="card-text">
+                                    <span class="badge bg-success">Active</span>
+                                    <span class="badge bg-info">3 Programmes</span>
+                                </p>
+                                <p class="text-muted small">
+                                    <i class="fas fa-envelope me-1"></i> info@atc.ac.tz<br>
+                                    <i class="fas fa-phone me-1"></i> +255 272 345 678
+                                </p>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i> Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-university text-primary me-2"></i>
+                                    Moshi Cooperative University
+                                </h5>
+                                <p class="card-text">
+                                    <span class="badge bg-success">Active</span>
+                                    <span class="badge bg-info">4 Programmes</span>
+                                </p>
+                                <p class="text-muted small">
+                                    <i class="fas fa-envelope me-1"></i> info@mocu.ac.tz<br>
+                                    <i class="fas fa-phone me-1"></i> +255 272 456 789
+                                </p>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i> Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Add Institution Modal -->
+    <div class="modal fade" id="addInstitutionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-university me-2"></i>Add Institution</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="institutionForm">
+                        <div class="mb-3">
+                            <label class="form-label">Institution Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="Enter institution name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Code</label>
+                            <input type="text" name="code" class="form-control" placeholder="Enter institution code">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" placeholder="Enter email">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="text" name="phone_number" class="form-control" placeholder="Enter phone number">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <textarea name="address" class="form-control" rows="2" placeholder="Enter address"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="institutionForm" class="btn btn-primary">Add Institution</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const list = document.getElementById('institutionsList');
+            const form = document.getElementById('institutionForm');
+            const escape = function(value) { const node = document.createElement('span'); node.textContent = value || ''; return node.innerHTML; };
+            const load = async function() {
+                try {
+                    const response = await fetch('../../api/admin-data.php?resource=institutions');
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.error || 'Unable to load institutions.');
+                    list.innerHTML = data.items.map(function(item) {
+                        const status = Number(item.is_active) ? 'success' : 'secondary';
+                        const label = Number(item.is_active) ? 'Active' : 'Inactive';
+                        return '<div class="col-md-4"><div class="card h-100"><div class="card-body"><h5 class="card-title"><i class="fas fa-university text-primary me-2"></i>' + escape(item.name) + '</h5><p class="card-text"><span class="badge bg-' + status + '">' + label + '</span></p><p class="text-muted small"><i class="fas fa-envelope me-1"></i>' + escape(item.email || 'No email') + '<br><i class="fas fa-phone me-1"></i>' + escape(item.phone_number || 'No phone') + '</p><p class="text-muted small mb-0">' + escape(item.address || '') + '</p></div></div></div>';
+                    }).join('') || '<div class="col-12"><p class="text-muted">No institutions have been added.</p></div>';
+                } catch (error) { list.innerHTML = '<div class="col-12"><div class="alert alert-danger">Unable to load institutions.</div></div>'; }
+            };
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                if (!form.checkValidity()) { form.classList.add('was-validated'); return; }
+                try {
+                    const response = await fetch('../../api/admin-data.php?resource=institutions', { method: 'POST', body: new URLSearchParams(new FormData(form)) });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.error || 'Unable to add institution.');
+                    bootstrap.Modal.getInstance(document.getElementById('addInstitutionModal')).hide();
+                    form.reset(); showToast(data.message, 'success'); load();
+                } catch (error) { showToast(error.message, 'danger'); }
+            });
+            load();
+        });
+    </script>
+</body>
+</html>

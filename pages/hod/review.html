@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Application - FAMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="fas fa-graduation-cap me-2"></i>FAMS
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> Dr. Sarah Mbeki
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item text-danger" href="../auth/login.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="dashboard.html">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="pending-reviews.html">
+                                <i class="fas fa-file-alt"></i> Pending Reviews
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <div>
+                        <h1 class="h2">Review Application</h1>
+                        <p class="text-muted">Reference: <strong>FAMS-2024-005</strong></p>
+                    </div>
+                    <span class="badge bg-warning">Pending Review</span>
+                </div>
+
+                <div class="row">
+                    <!-- Left Column - Application Details -->
+                    <div class="col-md-8">
+                        <!-- Student Info -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-user me-2"></i>Student Information
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Name:</strong> Mary Joseph</p>
+                                        <p><strong>Registration:</strong> REG-2024-005</p>
+                                        <p><strong>Programme:</strong> BSc. Computer Science</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Email:</strong> mary.joseph@student.edu</p>
+                                        <p><strong>Level:</strong> Year 3</p>
+                                        <p><strong>Institution:</strong> University of Dar es Salaam</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Application Details -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-file-alt me-2"></i>Application Details
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Specialization:</strong> Software Engineering</p>
+                                        <p><strong>Skill Level:</strong> <span class="badge bg-info">Intermediate</span></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Submitted:</strong> 2024-02-01 10:30 AM</p>
+                                        <p><strong>Application Window:</strong> Jan 15 - Feb 28, 2024</p>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <h6>Interest Statement</h6>
+                                        <p>I am passionate about software development and want to gain practical experience in building real-world applications. I have completed several academic projects and want to apply my skills in a professional environment.</p>
+                                        
+                                        <h6 class="mt-3">Reason for Application</h6>
+                                        <p>This attachment will help me bridge the gap between theory and practice. It will give me exposure to industry standards, development tools, and team collaboration.</p>
+                                        
+                                        <h6 class="mt-3">Learning Objectives</h6>
+                                        <p>To learn modern software development practices, work in a team environment, contribute to meaningful projects, and understand the software development lifecycle.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Documents -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-paperclip me-2"></i>Supporting Documents
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="text-center p-3 border rounded">
+                                            <i class="fas fa-file-pdf text-danger" style="font-size: 32px;"></i>
+                                            <p class="mt-2 mb-1"><strong>Application Letter</strong></p>
+                                            <a href="#" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-download me-1"></i>View
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-center p-3 border rounded">
+                                            <i class="fas fa-id-card text-primary" style="font-size: 32px;"></i>
+                                            <p class="mt-2 mb-1"><strong>Student ID</strong></p>
+                                            <a href="#" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-download me-1"></i>View
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-center p-3 border rounded">
+                                            <i class="fas fa-file-alt text-success" style="font-size: 32px;"></i>
+                                            <p class="mt-2 mb-1"><strong>Introduction Letter</strong></p>
+                                            <a href="#" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-download me-1"></i>View
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Review Actions -->
+                    <div class="col-md-4">
+                        <!-- Review Decision -->
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-check-circle me-2"></i>Review Decision
+                            </div>
+                            <div class="card-body">
+                                <form action="../../api/review-submit.php" method="POST">
+                                    <input type="hidden" name="application_id" id="applicationId">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Decision</label>
+                                        <div class="form-check">
+                                            <input type="radio" name="decision" id="approve" value="approved" class="form-check-input" required>
+                                            <label class="form-check-label text-success" for="approve">
+                                                <i class="fas fa-check-circle me-1"></i>Approve
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" name="decision" id="reject" value="rejected" class="form-check-input">
+                                            <label class="form-check-label text-danger" for="reject">
+                                                <i class="fas fa-times-circle me-1"></i>Reject
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" name="decision" id="correction" value="needs_correction" class="form-check-input">
+                                            <label class="form-check-label text-warning" for="correction">
+                                                <i class="fas fa-edit me-1"></i>Needs Correction
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="reviewComment" class="form-label fw-bold">Review Comment</label>
+                                        <textarea class="form-control" id="reviewComment" name="comment" rows="4" placeholder="Add your review comments here..."></textarea>
+                                    </div>
+
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-paper-plane me-2"></i>Submit Review
+                                        </button>
+                                        <a href="pending-reviews.html" class="btn btn-outline-secondary">
+                                            <i class="fas fa-arrow-left me-2"></i>Back to List
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Quick Info -->
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <h6><i class="fas fa-info-circle me-2"></i>Review Guidelines</h6>
+                                <ul class="small text-muted">
+                                    <li>Check if all documents are complete</li>
+                                    <li>Verify student meets requirements</li>
+                                    <li>Ensure specialization matches</li>
+                                    <li>Provide constructive feedback</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/script.js"></script>
+    <script>
+        const applicationId = new URLSearchParams(window.location.search).get('id');
+        if (!applicationId) {
+            document.querySelector('form button[type="submit"]').disabled = true;
+            showToast('Choose an application from the pending-review list first.', 'warning');
+        } else {
+            document.getElementById('applicationId').value = applicationId;
+        }
+    </script>
+</body>
+</html>

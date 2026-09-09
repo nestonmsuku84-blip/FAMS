@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - FAMS</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+                        <i class="fas fa-bars"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="far fa-bell"></i>
+                        <span class="badge badge-warning navbar-badge">3</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-header">3 Notifications</span>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-check-circle text-success mr-2"></i> Application FAMS-2024-001 approved
+                            <span class="float-right text-muted text-sm">2 hours</span>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-clock text-warning mr-2"></i> FAMS-2024-002 under review
+                            <span class="float-right text-muted text-sm">1 day</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item dropdown-footer">View All</a>
+                    </div>
+                </li>
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="dashboardUserName" class="ml-1">Student Account</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a href="profile.php" class="dropdown-item">
+                            <i class="fas fa-user mr-2"></i> Profile
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-cog mr-2"></i> Settings
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <!-- ✅ FIXED LOGOUT LINK -->
+                        <a href="../auth/login.html" class="dropdown-item text-danger">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Sidebar -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <a href="../../index.html" class="brand-link">
+                <i class="fas fa-graduation-cap" style="font-size: 30px; color: #fff;"></i>
+                <span class="brand-text font-weight-light ml-2">FAMS</span>
+            </a>
+
+            <div class="sidebar">
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <i class="fas fa-user-circle" style="font-size: 40px; color: #fff;"></i>
+                    </div>
+                    <div class="info">
+                        <a href="profile.php" id="sidebarUserName" class="d-block text-white">Student Account</a>
+                        <small class="text-white-50">Student</small>
+                    </div>
+                </div>
+
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                        <li class="nav-item">
+                            <a href="dashboard.html" class="nav-link active">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                <li class="nav-item">
+                            <a href="applications.html" class="nav-link">
+                                <i class="nav-icon fas fa-file-alt"></i>
+                                <p>My Applications</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="application-form.html" class="nav-link">
+                                <i class="nav-icon fas fa-plus-circle"></i>
+                                <p>New Application</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="placement.html" class="nav-link">
+                                <i class="nav-icon fas fa-briefcase"></i>
+                                <p>My Placement</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="application-form.html#supporting-documents" class="nav-link">
+                                <i class="nav-icon fas fa-upload"></i>
+                                <p>Upload Documents</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="profile.php" class="nav-link">
+                                <i class="nav-icon fas fa-user"></i>
+                                <p>Profile</p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1>Student Dashboard</h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="../../index.html">Home</a></li>
+                                <li class="breadcrumb-item active">Dashboard</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content">
+                <div class="container-fluid">
+                    <!-- Stats Cards -->
+                    <div class="row">
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3 id="totalApplications">0</h3>
+                                    <p>Total Applications</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <a href="applications.html" class="small-box-footer">
+                                    More info <i class="fas fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3 id="approvedApplications">0</h3>
+                                    <p>Approved</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <a href="applications.html" class="small-box-footer">
+                                    More info <i class="fas fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3 id="pendingApplications">0</h3>
+                                    <p>Pending Review</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <a href="applications.html" class="small-box-footer">
+                                    More info <i class="fas fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-primary">
+                                <div class="inner">
+                                    <h3 id="activePlacements">0</h3>
+                                    <p>Active Placement</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                                <a href="placement.html" class="small-box-footer">
+                                    More info <i class="fas fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Applications -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Recent Applications</h3>
+                                    <div class="card-tools">
+                                        <a href="applications.html" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-eye me-1"></i>View All
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body table-responsive p-0">
+                                    <table class="table table-hover text-nowrap">
+                                        <thead>
+                                            <tr>
+                                                <th>Reference</th>
+                                                <th>Specialization</th>
+                                                <th>Submitted</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recentApplicationsTable">
+                                            <tr>
+                                                <td><strong>FAMS-2024-001</strong></td>
+                                                <td>Software Engineering</td>
+                                                <td>2024-01-15</td>
+                                                <td><span class="badge badge-success">Approved</span></td>
+                                                <td>
+                                                    <a href="application-detail.html" class="btn btn-sm btn-primary">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>FAMS-2024-002</strong></td>
+                                                <td>Networking</td>
+                                                <td>2024-01-20</td>
+                                                <td><span class="badge badge-warning">Under Review</span></td>
+                                                <td>
+                                                    <a href="application-detail.html" class="btn btn-sm btn-primary">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>FAMS-2024-003</strong></td>
+                                                <td>Database Systems</td>
+                                                <td>2024-01-25</td>
+                                                <td><span class="badge badge-secondary">Draft</span></td>
+                                                <td>
+                                                    <a href="application-form.html" class="btn btn-sm btn-warning">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer class="main-footer text-center">
+            <strong>FAMS</strong>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    <script src="../../js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            try {
+                const response = await fetch('../../api/profile.php');
+                if (!response.ok) return;
+                const profile = await response.json();
+                const name = profile.full_name || 'Student Account';
+                document.getElementById('dashboardUserName').textContent = name;
+                document.getElementById('sidebarUserName').textContent = name;
+            } catch (error) {
+                // Keep the neutral fallback when the profile cannot be loaded.
+            }
+        });
+        document.addEventListener('DOMContentLoaded', async function () {
+            const body = document.getElementById('recentApplicationsTable');
+            const escape = function(value) { const node = document.createElement('span'); node.textContent = value || ''; return node.innerHTML; };
+            try {
+                const response = await fetch('../../api/application-data.php');
+                if (!response.ok) throw new Error('Unavailable');
+                const data = await response.json();
+                const apps = data.applications;
+                document.getElementById('totalApplications').textContent = apps.length;
+                document.getElementById('approvedApplications').textContent = apps.filter(function(app) { return app.status === 'approved'; }).length;
+                document.getElementById('pendingApplications').textContent = apps.filter(function(app) { return ['submitted', 'resubmitted', 'under_review', 'returned_for_correction'].includes(app.status); }).length;
+                document.getElementById('activePlacements').textContent = apps.filter(function(app) { return app.placement_status === 'confirmed'; }).length;
+                body.innerHTML = apps.slice(0, 5).map(function(app) { return '<tr><td><strong>' + escape(app.reference_number) + '</strong></td><td>' + escape(app.specialization_name || '—') + '</td><td>' + new Date((app.submitted_at || app.created_at).replace(' ', 'T')).toLocaleDateString() + '</td><td><span class="badge badge-secondary text-capitalize">' + escape(app.status.replace(/_/g, ' ')) + '</span></td><td><a href="application-detail.html?id=' + app.id + '" class="btn btn-sm btn-primary"><i class="fas fa-eye"></i></a></td></tr>'; }).join('') || '<tr><td colspan="5" class="text-center text-muted">No applications yet.</td></tr>';
+            } catch (error) { body.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Unable to load applications.</td></tr>'; }
+        });
+    </script>
+</body>
+</html>
