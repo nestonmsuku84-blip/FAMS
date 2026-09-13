@@ -121,7 +121,6 @@ try {
             $stmt->execute([$name, $code ?: null, $email ?: null, $phone ?: null, $address ?: null, $institutionId]);
             adminRespond(['message' => 'Institution details updated.']);
         }
-        if ($pdo->query('SELECT COUNT(*) FROM institutions WHERE is_active = TRUE')->fetchColumn()) adminRespond(['error' => 'This FAMS installation is configured for one organization. Update the existing organization instead of adding another one.'], 422);
         $stmt = $pdo->prepare('INSERT INTO institutions (name, code, email, phone_number, address, is_active) VALUES (?, ?, ?, ?, ?, TRUE)');
         $stmt->execute([$name, $code ?: null, $email ?: null, $phone ?: null, $address ?: null]);
         adminRespond(['message' => 'Institution created.', 'id' => (int)$pdo->lastInsertId()], 201);
