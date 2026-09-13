@@ -35,6 +35,7 @@ function roleDashboard(string $role): string
         'administrator' => '../pages/admin/dashboard.html',
         'department officer' => '../pages/hod/dashboard.html',
         'fams officer' => '../pages/secretary/dashboard.html',
+        'organization supervisor', 'organizational supervisor' => '../pages/supervisor/dashboard.html',
         default => '../pages/student/dashboard.html',
     };
 }

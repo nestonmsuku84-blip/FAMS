@@ -1,342 +1,458 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Application - FAMS</title>
-    
-    <!-- BOOTSTRAP CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- FONT AWESOME -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- OUR OWN CSS -->
-    <link rel="stylesheet" href="../../css/style.css">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+<link rel="stylesheet" href="../../css/style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/tinymce@8/tinymce.min.js" referrerpolicy="origin"></script>
+
 </head>
 <body>
-    <!-- ========================================= -->
-    <!-- TOP NAVIGATION -->
-    <!-- ========================================= -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="dashboard.html">
-                <i class="fas fa-graduation-cap me-2"></i>FAMS
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="dashboard.html">
+            <i class="fas fa-graduation-cap me-2"></i>FAMS
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link position-relative" href="#">
+                        <i class="fas fa-bell"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            3
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle me-1"></i> <span class="student-user-name">Student Account</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="../../api/logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<div class="container-fluid">
+    <div class="row">
+        
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link position-relative" href="#">
-                            <i class="fas fa-bell"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                3
-                            </span>
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
                         </a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-1"></i> <span class="student-user-name">Student Account</span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="applications.html">
+                            <i class="fas fa-file-alt"></i> My Applications
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="../auth/login.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
-                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="application-form.html">
+                            <i class="fas fa-plus-circle"></i> New Application
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="placement.html">
+                            <i class="fas fa-briefcase"></i> My Placement
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
                     </li>
                 </ul>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <!-- ========================================= -->
-    <!-- SIDEBAR + MAIN CONTENT -->
-    <!-- ========================================= -->
-    <div class="container-fluid">
-        <div class="row">
-            <!-- ========== SIDEBAR ========== -->
-            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
-                <div class="position-sticky pt-3">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="dashboard.html">
-                                <i class="fas fa-tachometer-alt"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="applications.html">
-                                <i class="fas fa-file-alt"></i> My Applications
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="application-form.html">
-                                <i class="fas fa-plus-circle"></i> New Application
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="placement.html">
-                                <i class="fas fa-briefcase"></i> My Placement
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-upload"></i> Upload Documents
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-user"></i> Profile
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
 
-            <!-- ========== MAIN CONTENT ========== -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <!-- Page Header -->
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">New Application</h1>
-                    <div class="float-right">
-                        <a href="applications.html" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left me-2"></i>Back to Applications
-                        </a>
-                        <a href="dashboard.html" class="btn btn-secondary">
-                            <i class="fas fa-home me-2"></i>Dashboard
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">New Application</h1>
+                <span class="badge bg-info" id="applicationWindowStatus">Checking application window…</span>
+            </div>
+
+            
+            <form id="applicationForm" action="../../api/application-submit.php" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <input type="hidden" name="submission_action" id="applicationAction" value="submit">
+                <input type="hidden" name="application_id" id="applicationId" value="">
+                
+                
+                <div class="card mb-4" id="supporting-documents">
+                    <div class="card-header">
+                        <i class="fas fa-user me-2"></i>Personal Information
+                        <a href="profile.php" class="btn btn-sm btn-outline-primary float-end">
+                            <i class="fas fa-user-edit me-1"></i>Edit Profile
                         </a>
                     </div>
-                    <span class="badge bg-info" id="applicationWindowStatus">Checking application window…</span>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" id="profileFullName" class="form-control" placeholder="Complete your profile first" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Registration Number</label>
+                                <input type="text" id="profileRegistrationNumber" class="form-control" placeholder="Complete your profile first" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Programme</label>
+                                <input type="text" id="profileProgramme" class="form-control" placeholder="Complete your profile first" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Level</label>
+                                <input type="text" id="profileLevel" class="form-control" placeholder="Complete your profile first" readonly>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- ========== APPLICATION FORM ========== -->
-                <form id="applicationForm" action="../../api/application-submit.php" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-                    
-                    <!-- ===== SECTION 1: Personal Information (Read Only) ===== -->
-                    <div class="card mb-4" id="supporting-documents">
-                        <div class="card-header">
-                            <i class="fas fa-user me-2"></i>Personal Information
-                            <a href="profile.php" class="btn btn-sm btn-outline-primary float-end">
-                                <i class="fas fa-user-edit me-1"></i>Edit Profile
-                            </a>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Full Name</label>
-                                    <input type="text" id="profileFullName" class="form-control" placeholder="Complete your profile first" readonly>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Registration Number</label>
-                                    <input type="text" id="profileRegistrationNumber" class="form-control" placeholder="Complete your profile first" readonly>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Programme</label>
-                                    <input type="text" id="profileProgramme" class="form-control" placeholder="Complete your profile first" readonly>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Level</label>
-                                    <input type="text" id="profileLevel" class="form-control" placeholder="Complete your profile first" readonly>
-                                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-file-alt me-2"></i>Application Details
+                        <span class="text-danger ms-2">Required fields</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Specialization -->
+                            <div class="col-md-6 mb-3">
+                                <label for="specialization" class="form-label required">Preferred Specialization</label>
+                                <select class="form-select" id="specialization" name="specialization" required>
+                                    <option value="">Loading specializations…</option>
+                                </select>
+                                <div class="invalid-feedback">Please select a specialization</div>
+                            </div>
+                            
+                            <!-- Skill Level -->
+                            <div class="col-md-6 mb-3">
+                                <label for="skillLevel" class="form-label required">Skill Level</label>
+                                <select class="form-select" id="skillLevel" name="skill_level" required>
+                                    <option value="">Select skill level...</option>
+                                    <option value="beginner">Beginner</option>
+                                    <option value="intermediate">Intermediate</option>
+                                    <option value="advanced">Advanced</option>
+                                </select>
+                                <div class="invalid-feedback">Please select your skill level</div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="reportingDate" class="form-label required">Reporting Date</label>
+                                <input type="date" class="form-control" id="reportingDate" name="reporting_date" required>
+                                <div class="invalid-feedback">Please provide your reporting date</div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="trainingEndDate" class="form-label required">Training End Date</label>
+                                <input type="date" class="form-control" id="trainingEndDate" name="training_end_date" required>
+                                <div class="invalid-feedback">Please provide the training end date</div>
+                            </div>
+                            
+                            <!-- Interest Statement -->
+                            <div class="col-12 mb-3">
+                                <label for="interestStatement" class="form-label required">Interest Statement</label>
+                                    <textarea class="form-control" id="interestStatement" name="interest_statement" rows="3" data-tinymce-ready
+                                          placeholder="Describe why you're interested in this field attachment..." required></textarea>
+                                <div class="invalid-feedback">Please provide your interest statement</div>
+                                <small class="text-muted">Minimum 50 words recommended</small>
+                            </div>
+                            
+                            <!-- Reason for Application -->
+                            <div class="col-12 mb-3">
+                                <label for="reasonForApplication" class="form-label required">Reason for Application</label>
+                                    <textarea class="form-control" id="reasonForApplication" name="reason_for_application" rows="3" data-tinymce-ready
+                                          placeholder="Explain your reasons for applying for this attachment..." required></textarea>
+                                <div class="invalid-feedback">Please provide your reason for application</div>
+                            </div>
+                            
+                            <!-- Learning Objectives -->
+                            <div class="col-12 mb-3">
+                                <label for="learningObjectives" class="form-label required">Expected Learning Objectives</label>
+                                    <textarea class="form-control" id="learningObjectives" name="learning_objectives" rows="3" data-tinymce-ready
+                                          placeholder="What do you hope to learn from this attachment?" required></textarea>
+                                <div class="invalid-feedback">Please provide your learning objectives</div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- ===== SECTION 2: Application Details ===== -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-file-alt me-2"></i>Application Details
-                            <span class="text-danger ms-2">* Required fields</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <!-- Specialization -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="specialization" class="form-label required">Preferred Specialization</label>
-                                    <select class="form-select" id="specialization" name="specialization" required>
-                                        <option value="">Loading specializations…</option>
-                                    </select>
-                                    <div class="invalid-feedback">Please select a specialization</div>
+
+                <!-- ===== SECTION 3: Documents ===== -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-paperclip me-2"></i>Supporting Documents
+                        <span class="text-danger ms-2">* Required</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Application Letter -->
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label required">Application Letter</label>
+                                <div class="file-upload" id="appLetterUpload">
+                                    <i class="fas fa-file-pdf icon"></i>
+                                    <p>Drop file or click to browse</p>
+                                    <input type="file" name="application_letter" accept="application/pdf,.pdf" required>
                                 </div>
-                                
-                                <!-- Skill Level -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="skillLevel" class="form-label required">Skill Level</label>
-                                    <select class="form-select" id="skillLevel" name="skill_level" required>
-                                        <option value="">Select skill level...</option>
-                                        <option value="beginner">Beginner</option>
-                                        <option value="intermediate">Intermediate</option>
-                                        <option value="advanced">Advanced</option>
-                                    </select>
-                                    <div class="invalid-feedback">Please select your skill level</div>
+                                <small class="text-muted">PDF only (Max 3MB)</small>
+                                <div class="invalid-feedback">Please upload your application letter</div>
+                            </div>
+                            
+                            <!-- Student ID -->
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label required">Student ID</label>
+                                <div class="file-upload" id="studentIdUpload">
+                                    <i class="fas fa-id-card icon"></i>
+                                    <p>Drop file or click to browse</p>
+                                    <input type="file" name="student_id" accept="image/jpeg,image/png,.jpg,.jpeg,.png" required>
                                 </div>
-                                
-                                <!-- Interest Statement -->
-                                <div class="col-12 mb-3">
-                                    <label for="interestStatement" class="form-label required">Interest Statement</label>
-                                    <textarea class="form-control" id="interestStatement" name="interest_statement" rows="3" 
-                                              placeholder="Describe why you're interested in this field attachment..." required></textarea>
-                                    <div class="invalid-feedback">Please provide your interest statement</div>
-                                    <small class="text-muted">Minimum 50 words recommended</small>
+                                <small class="text-muted">JPG or PNG only (Max 3MB)</small>
+                                <div class="invalid-feedback">Please upload your student ID</div>
+                            </div>
+                            
+                            <!-- Introduction Letter -->
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label required">Introduction Letter</label>
+                                <div class="file-upload" id="introLetterUpload">
+                                    <i class="fas fa-file-alt icon"></i>
+                                    <p>Drop file or click to browse</p>
+                                    <input type="file" name="university_introduction_letter" accept="application/pdf,.pdf" required>
                                 </div>
-                                
-                                <!-- Reason for Application -->
-                                <div class="col-12 mb-3">
-                                    <label for="reasonForApplication" class="form-label required">Reason for Application</label>
-                                    <textarea class="form-control" id="reasonForApplication" name="reason_for_application" rows="3" 
-                                              placeholder="Explain your reasons for applying for this attachment..." required></textarea>
-                                    <div class="invalid-feedback">Please provide your reason for application</div>
-                                </div>
-                                
-                                <!-- Learning Objectives -->
-                                <div class="col-12 mb-3">
-                                    <label for="learningObjectives" class="form-label required">Expected Learning Objectives</label>
-                                    <textarea class="form-control" id="learningObjectives" name="learning_objectives" rows="3" 
-                                              placeholder="What do you hope to learn from this attachment?" required></textarea>
-                                    <div class="invalid-feedback">Please provide your learning objectives</div>
-                                </div>
+                                <small class="text-muted">PDF only (Max 3MB)</small>
+                                <div class="invalid-feedback">Please upload your introduction letter</div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- ===== SECTION 3: Documents ===== -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-paperclip me-2"></i>Supporting Documents
-                            <span class="text-danger ms-2">* Required</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <!-- Application Letter -->
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label required">Application Letter</label>
-                                    <div class="file-upload" id="appLetterUpload">
-                                        <i class="fas fa-file-pdf icon"></i>
-                                        <p>Drop file or click to browse</p>
-                                        <input type="file" name="application_letter" accept=".pdf,.jpg,.png" required>
-                                    </div>
-                                    <small class="text-muted">PDF, JPG, PNG (Max 2MB)</small>
-                                    <div class="invalid-feedback">Please upload your application letter</div>
-                                </div>
-                                
-                                <!-- Student ID -->
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label required">Student ID</label>
-                                    <div class="file-upload" id="studentIdUpload">
-                                        <i class="fas fa-id-card icon"></i>
-                                        <p>Drop file or click to browse</p>
-                                        <input type="file" name="student_id" accept=".pdf,.jpg,.png" required>
-                                    </div>
-                                    <small class="text-muted">PDF, JPG, PNG (Max 2MB)</small>
-                                    <div class="invalid-feedback">Please upload your student ID</div>
-                                </div>
-                                
-                                <!-- Introduction Letter -->
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label required">Introduction Letter</label>
-                                    <div class="file-upload" id="introLetterUpload">
-                                        <i class="fas fa-file-alt icon"></i>
-                                        <p>Drop file or click to browse</p>
-                                        <input type="file" name="university_introduction_letter" accept=".pdf,.jpg,.png" required>
-                                    </div>
-                                    <small class="text-muted">PDF, JPG, PNG (Max 2MB)</small>
-                                    <div class="invalid-feedback">Please upload your introduction letter</div>
-                                </div>
-                            </div>
+
+                <!-- ===== SECTION 4: Declaration ===== -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="form-check">
+                            <input type="checkbox" name="declaration" class="form-check-input" id="declaration" value="1" required>
+                            <label class="form-check-label" for="declaration">
+                                I hereby declare that all information provided in this application is true and complete to the best of my knowledge.
+                            </label>
+                            <div class="invalid-feedback">You must accept the declaration to submit</div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- ===== SECTION 4: Declaration ===== -->
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="form-check">
-                                <input type="checkbox" name="declaration" class="form-check-input" id="declaration" value="1" required>
-                                <label class="form-check-label" for="declaration">
-                                    I hereby declare that all information provided in this application is true and complete to the best of my knowledge.
-                                </label>
-                                <div class="invalid-feedback">You must accept the declaration to submit</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ===== FORM ACTIONS ===== -->
-                    <div class="d-flex gap-3 mb-4">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-paper-plane me-2"></i>Submit Application
-                        </button>
-                        <a href="applications.html" class="btn btn-outline-secondary">
-                            <i class="fas fa-list me-2"></i>My Applications
-                        </a>
-                        <a href="dashboard.html" class="btn btn-outline-danger">
-                            <i class="fas fa-times me-2"></i>Cancel
-                        </a>
-                    </div>
-                </form>
-            </main>
-        </div>
+                <div class="d-flex gap-3 mb-4">
+                    <button type="button" id="saveDraft" class="btn btn-outline-secondary"><i class="fas fa-save me-2"></i>Save Draft</button>
+                    <button type="submit" id="submitApplication" class="btn btn-primary" disabled>
+                        <i class="fas fa-paper-plane me-2"></i>Submit Application
+                    </button>
+                    <a href="applications.html" class="btn btn-outline-secondary">
+                        <i class="fas fa-list me-2"></i>My Applications
+                    </a>
+                    <a href="dashboard.html" class="btn btn-outline-danger">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </main>
     </div>
+</div>
 
-    <!-- ========================================= -->
-    <!-- BOOTSTRAP JS -->
-    <!-- ========================================= -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- OUR OWN JS -->
-    <script src="../../js/script.js"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', async function() {
-            try {
-                const response = await fetch('../../api/profile.php');
-                if (!response.ok) throw new Error('Profile unavailable');
-                const profile = await response.json();
-                document.getElementById('profileFullName').value = profile.full_name || '';
-                document.getElementById('profileRegistrationNumber').value = profile.registration_number || '';
-                document.getElementById('profileProgramme').value = profile.programme_name || '';
-                document.getElementById('profileLevel').value = profile.level_name || '';
-                if (!profile.registration_number || !profile.programme_name || !profile.level_name) {
-                    showToast('Please complete your profile before submitting an application.', 'warning');
-                }
-            } catch (error) {
-                showToast('Unable to load your profile. Please try again.', 'danger');
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script src="../../js/script.js"></script>
+
+
+<script>
+    tinymce.init({
+        selector: '#interestStatement, #reasonForApplication, #learningObjectives',
+        license_key: 'gpl',
+        height: 300,
+        menubar: false,
+        plugins: 'lists link table code',
+        toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright | bullist numlist | link table | code',
+        branding: false,
+        promotion: false,
+        statusbar: true,
+        setup: function(editor) {
+            editor.on('change keyup', function() {
+                editor.save();
+            });
+        }
+    });
+</script>
+
+
+
+<script>
+    const applicationForm = document.getElementById('applicationForm');
+    const applicationEndpoint = new URL('../../api/application-submit.php', window.location.href).href;
+    document.getElementById('saveDraft').addEventListener('click', async function() {
+
+        if (window.tinymce) window.tinymce.triggerSave();
+
+        const action = document.getElementById('applicationAction');
+        action.value = 'draft';
+        try {
+            const response = await fetch(applicationEndpoint, { method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(applicationForm) });
+            const payload = await response.text();
+            let data = {}; try { data = JSON.parse(payload); } catch (error) { data.message = payload; }
+            if (!response.ok) throw new Error(data.message || data.error || (response.status === 404 ? 'The application service was not found. Open FAMS through your PHP/Apache server, not a static Live Server.' : 'Unable to save the draft.'));
+            document.getElementById('applicationId').value = data.id;
+            document.getElementById('saveDraft').innerHTML = '<i class="fas fa-save me-2"></i>Update Draft';
+            document.getElementById('submitApplication').disabled = false;
+            showToast(data.message, 'success');
+        } catch (error) { showToast(error.message, 'danger'); }
+        finally { action.value = 'submit'; }
+    });
+    applicationForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        if (window.tinymce) window.tinymce.triggerSave();
+
+        const reportingDate = document.getElementById('reportingDate');
+        const trainingEndDate = document.getElementById('trainingEndDate');
+        if (reportingDate.value && trainingEndDate.value && trainingEndDate.value < reportingDate.value) {
+            event.preventDefault();
+            trainingEndDate.setCustomValidity('The training end date cannot be before the reporting date.');
+            this.classList.add('was-validated');
+            showToast('The training end date cannot be before the reporting date.', 'warning');
+            return;
+        }
+        trainingEndDate.setCustomValidity('');
+        if (!document.getElementById('applicationId').value) { showToast('Save this application as a draft before submitting it.', 'warning'); return; }
+        if (!this.checkValidity()) { this.classList.add('was-validated'); showToast('Please complete all required fields before submitting.', 'warning'); return; }
+        if (!confirm('Are you sure you want to submit this application for review?')) return;
+        try {
+            const response = await fetch(applicationEndpoint, { method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(applicationForm) });
+            const payload = await response.text();
+            let data = {}; try { data = JSON.parse(payload); } catch (error) { data.message = payload; }
+            if (!response.ok) throw new Error(data.message || data.error || (response.status === 404 ? 'The application service was not found. Open FAMS through your PHP/Apache server, not a static Live Server.' : 'Unable to submit the application.'));
+            window.location.assign(data.redirect || 'applications.html?submitted=1');
+        } catch (error) {
+            showToast(error.message || 'Unable to submit the application.', 'danger');
+        }
+    });
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        try {
+            const response = await fetch('../../api/profile.php');
+            if (!response.ok) throw new Error('Profile unavailable');
+            const profile = await response.json();
+            document.getElementById('profileFullName').value = profile.full_name || '';
+            document.getElementById('profileRegistrationNumber').value = profile.registration_number || '';
+            document.getElementById('profileProgramme').value = profile.programme_name || '';
+            document.getElementById('profileLevel').value = profile.level_name || '';
+            if (!profile.registration_number || !profile.programme_name || !profile.level_name) {
+                showToast('Please complete your profile before submitting an application.', 'warning');
             }
-        });
+        } catch (error) {
+            showToast('Unable to load your profile. Please try again.', 'danger');
+        }
+    });
 
-        document.addEventListener('DOMContentLoaded', async function() {
+    document.addEventListener('DOMContentLoaded', async function() {
+        const draftId = new URLSearchParams(window.location.search).get('draft');
+        if (!draftId) return;
+        try {
+            const response = await fetch('../../api/application-data.php?mode=draft&id=' + encodeURIComponent(draftId));
+            const data = await response.json(); if (!response.ok) throw new Error(data.error || 'Draft unavailable');
+            const app = data.application;
+            document.getElementById('applicationId').value = app.id;
+            document.getElementById('skillLevel').value = app.skill_level || '';
+            document.getElementById('interestStatement').value = app.interest_statement || '';
+            document.getElementById('reasonForApplication').value = app.reason_for_application || '';
+            document.getElementById('learningObjectives').value = app.expected_learning_objectives || '';
+            document.getElementById('reportingDate').value = app.reporting_date || '';
+            document.getElementById('trainingEndDate').value = app.training_end_date || '';
+
+            /* TINYMCE ADDED */
+            if (window.tinymce && tinymce.get('interestStatement')) {
+                tinymce.get('interestStatement').setContent(app.interest_statement || '');
+            }
+
+            if (window.tinymce && tinymce.get('reasonForApplication')) {
+                tinymce.get('reasonForApplication').setContent(app.reason_for_application || '');
+            }
+
+            if (window.tinymce && tinymce.get('learningObjectives')) {
+                tinymce.get('learningObjectives').setContent(app.expected_learning_objectives || '');
+            }
+            /* END TINYMCE ADDED */
+
+            document.getElementById('saveDraft').innerHTML = '<i class="fas fa-save me-2"></i>Update Draft';
+            document.getElementById('submitApplication').disabled = false;
             const select = document.getElementById('specialization');
-            const windowStatus = document.getElementById('applicationWindowStatus');
-            try {
-                const response = await fetch('../../api/application-data.php?mode=options');
-                if (!response.ok) throw new Error('Options unavailable');
-                const data = await response.json();
-                select.innerHTML = '<option value="">Select specialization...</option>';
-                data.specializations.forEach(function(item) {
-                    const option = document.createElement('option');
-                    option.value = item.id;
-                    option.textContent = item.name;
-                    select.appendChild(option);
-                });
-                if (!data.specializations.length) {
-                    select.disabled = true;
-                    windowStatus.className = 'badge bg-warning';
-                    windowStatus.textContent = 'No active specializations are available yet.';
-                } else if (data.window) {
-                    windowStatus.className = 'badge bg-success';
-                    windowStatus.textContent = 'Application window closes ' + new Date(data.window.close_date.replace(' ', 'T')).toLocaleDateString();
-                } else {
-                    select.disabled = true;
-                    windowStatus.className = 'badge bg-warning';
-                    windowStatus.textContent = 'There is no open application window.';
-                }
-            } catch (error) {
+            const setSpecialization = function() { if (app.specialization_id) select.value = app.specialization_id; };
+            setSpecialization(); select.addEventListener('specializationsloaded', setSpecialization, { once: true });
+            showToast('Draft loaded. You can edit it, save your changes, then add the required documents and submit.', 'info');
+        } catch (error) { showToast(error.message, 'danger'); }
+    });
+
+    document.addEventListener('DOMContentLoaded', async function() {
+        const select = document.getElementById('specialization');
+        const windowStatus = document.getElementById('applicationWindowStatus');
+        try {
+            const response = await fetch('../../api/application-data.php?mode=options');
+            if (!response.ok) throw new Error('Options unavailable');
+            const data = await response.json();
+            select.innerHTML = '<option value="">Select specialization...</option>';
+            data.specializations.forEach(function(item) {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.textContent = item.name;
+                select.appendChild(option);
+            });
+            select.dispatchEvent(new Event('specializationsloaded'));
+            if (!data.specializations.length) {
                 select.disabled = true;
-                windowStatus.className = 'badge bg-danger';
-                windowStatus.textContent = 'Application options are unavailable.';
+                windowStatus.className = 'badge bg-warning';
+                windowStatus.textContent = 'No active specializations are available yet.';
+            } else if (data.window) {
+                const windowStart = data.window.open_date.slice(0, 10);
+                document.getElementById('reportingDate').min = windowStart;
+                document.getElementById('trainingEndDate').min = windowStart;
+                windowStatus.className = 'badge bg-success';
+                windowStatus.textContent = 'Training dates must be on or after ' + new Date(data.window.open_date.replace(' ', 'T')).toLocaleDateString();
+            } else {
+                select.disabled = true;
+                windowStatus.className = 'badge bg-warning';
+                windowStatus.textContent = 'There is no active application window.';
             }
-        });
-    </script>
-    
+        } catch (error) {
+            select.disabled = true;
+            windowStatus.className = 'badge bg-danger';
+            windowStatus.textContent = 'Application options are unavailable.';
+        }
+    });
+</script>
+
 </body>
 </html>

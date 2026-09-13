@@ -48,6 +48,17 @@ try {
         LEFT JOIN placements pl ON pl.application_id = a.id
         WHERE $scope";
 
+    if ($mode === 'draft') {
+        requireRole('Student');
+        $applicationId = filter_var($_GET['id'] ?? null, FILTER_VALIDATE_INT);
+        if (!$applicationId) respond(['error' => 'A valid draft id is required.'], 422);
+        $draft = $pdo->prepare("SELECT a.*, aps.specialization_id $base AND a.id = ? AND a.status = 'draft'");
+        $draft->execute([...$params, $applicationId]);
+        $item = $draft->fetch();
+        if (!$item) respond(['error' => 'Draft not found.'], 404);
+        respond(['application' => $item]);
+    }
+
     if ($mode === 'detail') {
         $applicationId = filter_var($_GET['id'] ?? null, FILTER_VALIDATE_INT);
         if (!$applicationId) respond(['error' => 'A valid application id is required.'], 422);

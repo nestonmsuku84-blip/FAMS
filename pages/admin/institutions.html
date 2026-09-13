@@ -67,13 +67,19 @@
                                 <i class="fas fa-calendar-alt"></i> Application Windows
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="notifications.html">
+                                <i class="fas fa-bell"></i> Notifications
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </nav>
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Manage Institutions</h1>
+                    <h1 class="h2">Institution Settings</h1>
+                    <p class="text-muted w-100 mb-0">This FAMS installation is managed by one institution.</p>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addInstitutionModal">
                         <i class="fas fa-plus me-2"></i>Add Institution
                     </button>
@@ -164,6 +170,8 @@
                 </div>
                 <div class="modal-body">
                     <form id="institutionForm">
+                        <input type="hidden" name="action" value="create">
+                        <input type="hidden" name="institution_id">
                         <div class="mb-3">
                             <label class="form-label">Institution Name</label>
                             <input type="text" name="name" class="form-control" placeholder="Enter institution name" required>
@@ -209,7 +217,7 @@
                     list.innerHTML = data.items.map(function(item) {
                         const status = Number(item.is_active) ? 'success' : 'secondary';
                         const label = Number(item.is_active) ? 'Active' : 'Inactive';
-                        return '<div class="col-md-4"><div class="card h-100"><div class="card-body"><h5 class="card-title"><i class="fas fa-university text-primary me-2"></i>' + escape(item.name) + '</h5><p class="card-text"><span class="badge bg-' + status + '">' + label + '</span></p><p class="text-muted small"><i class="fas fa-envelope me-1"></i>' + escape(item.email || 'No email') + '<br><i class="fas fa-phone me-1"></i>' + escape(item.phone_number || 'No phone') + '</p><p class="text-muted small mb-0">' + escape(item.address || '') + '</p></div></div></div>';
+                        return '<div class="col-md-6 col-xl-5"><div class="card h-100"><div class="card-body"><h5 class="card-title"><i class="fas fa-university text-primary me-2"></i>' + escape(item.name) + '</h5><p class="card-text"><span class="badge bg-' + status + '">' + label + '</span></p><p class="text-muted small"><i class="fas fa-envelope me-1"></i>' + escape(item.email || 'No email') + '<br><i class="fas fa-phone me-1"></i>' + escape(item.phone_number || 'No phone') + '</p><p class="text-muted small">' + escape(item.address || '') + '</p><button class="btn btn-sm btn-outline-primary institution-edit" data-item="' + encodeURIComponent(JSON.stringify(item)) + '"><i class="fas fa-edit me-1"></i>Edit details</button></div></div></div>';
                     }).join('') || '<div class="col-12"><p class="text-muted">No institutions have been added.</p></div>';
                 } catch (error) { list.innerHTML = '<div class="col-12"><div class="alert alert-danger">Unable to load institutions.</div></div>'; }
             };
@@ -224,6 +232,16 @@
                     form.reset(); showToast(data.message, 'success'); load();
                 } catch (error) { showToast(error.message, 'danger'); }
             });
+            list.addEventListener('click', function(event) {
+                const button = event.target.closest('.institution-edit'); if (!button) return;
+                const item = JSON.parse(decodeURIComponent(button.dataset.item));
+                form.reset(); form.elements.action.value = 'update'; form.elements.institution_id.value = item.id;
+                ['name', 'code', 'email', 'phone_number', 'address'].forEach(function(field) { form.elements[field].value = item[field] || ''; });
+                document.querySelector('#addInstitutionModal .modal-title').innerHTML = '<i class="fas fa-university me-2"></i>Edit Institution';
+                document.querySelector('[form="institutionForm"]').textContent = 'Save Changes';
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('addInstitutionModal')).show();
+            });
+            document.querySelector('[data-bs-target="#addInstitutionModal"]').addEventListener('click', function() { form.reset(); form.elements.action.value = 'create'; form.elements.institution_id.value = ''; document.querySelector('#addInstitutionModal .modal-title').innerHTML = '<i class="fas fa-university me-2"></i>Add Institution'; document.querySelector('[form="institutionForm"]').textContent = 'Add Institution'; });
             load();
         });
     </script>

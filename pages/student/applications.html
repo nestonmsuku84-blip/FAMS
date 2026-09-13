@@ -66,18 +66,11 @@
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">My Applications</h1>
-                    <div class="float-right">
-                        <a href="application-form.html" class="btn btn-primary">
-                            <i class="fas fa-plus me-2"></i>New Application
-                        </a>
-                        <a href="dashboard.html" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
-                        </a>
-                    </div>
                     <a href="application-form.html" class="btn btn-primary">
                         <i class="fas fa-plus me-2"></i>New Application
                     </a>
                 </div>
+                <div id="submissionFeedback" class="alert alert-primary d-none" role="alert"><i class="fas fa-check-circle me-2"></i>Your application was submitted successfully. Please wait for the result.</div>
 
                 <div class="card">
                     <div class="card-body p-0">
@@ -105,6 +98,7 @@
     <script src="../../js/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
+            if (new URLSearchParams(window.location.search).has('submitted')) document.getElementById('submissionFeedback').classList.remove('d-none');
             const body = document.getElementById('applicationsTableBody');
             const escapeHtml = function(value) { const element = document.createElement('div'); element.textContent = value || ''; return element.innerHTML; };
             try {
@@ -118,7 +112,10 @@
                 body.innerHTML = data.applications.map(function(app) {
                     const date = app.submitted_at || app.created_at;
                     const status = app.status.replace(/_/g, ' ');
-                    return '<tr><td><strong>' + escapeHtml(app.reference_number) + '</strong></td><td>' + escapeHtml(app.specialization_name || 'Not selected') + '</td><td>' + new Date(date.replace(' ', 'T')).toLocaleDateString() + '</td><td><span class="badge bg-secondary text-capitalize">' + escapeHtml(status) + '</span></td><td><a href="application-detail.html?id=' + app.id + '" class="btn btn-sm btn-outline-primary" aria-label="View application"><i class="fas fa-eye"></i></a></td></tr>';
+                    const target = app.status === 'draft' ? 'application-form.html?draft=' + app.id : 'application-detail.html?id=' + app.id;
+                    const icon = app.status === 'draft' ? 'fa-pen' : 'fa-eye';
+                    const label = app.status === 'draft' ? 'Edit draft' : 'View application';
+                    return '<tr><td><strong>' + escapeHtml(app.reference_number) + '</strong></td><td>' + escapeHtml(app.specialization_name || 'Not selected') + '</td><td>' + new Date(date.replace(' ', 'T')).toLocaleDateString() + '</td><td><span class="badge bg-secondary text-capitalize">' + escapeHtml(status) + '</span></td><td><a href="' + target + '" class="btn btn-sm btn-outline-primary" aria-label="' + label + '" title="' + label + '"><i class="fas ' + icon + '"></i><span class="visually-hidden">' + label + '</span></a></td></tr>';
                 }).join('');
             } catch (error) {
                 body.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-4">Unable to load applications.</td></tr>';

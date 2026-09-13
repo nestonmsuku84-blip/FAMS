@@ -5,6 +5,87 @@
 // "Wait for the page to fully load, then run this code"
 document.addEventListener('DOMContentLoaded', function() {
 
+    // Add the same rich-text editor to every standard FAMS textarea. Pages
+    // with a tailored editor can opt out using data-tinymce-ready.
+    const editorFields = document.querySelectorAll('textarea:not([data-no-tinymce]):not([data-tinymce-ready])');
+    if (editorFields.length) {
+        const editorScript = document.createElement('script');
+        editorScript.src = 'https://cdn.jsdelivr.net/npm/tinymce@8/tinymce.min.js';
+        editorScript.referrerPolicy = 'origin';
+        editorScript.onload = function() {
+            if (!window.tinymce) return;
+            window.tinymce.init({
+                selector: 'textarea:not([data-no-tinymce]):not([data-tinymce-ready])',
+                license_key: 'gpl',
+                plugins: 'lists link table code wordcount',
+                toolbar: 'undo redo | blocks | bold italic underline | bullist numlist | link table | removeformat | code',
+                menubar: false,
+                statusbar: false,
+                promotion: false,
+                height: 220,
+                setup: function(editor) { editor.on('change input undo redo', function() { editor.save(); }); }
+            });
+        };
+        document.head.appendChild(editorScript);
+    }
+    document.addEventListener('submit', function() {
+        if (window.tinymce) window.tinymce.triggerSave();
+    }, true);
+
+    // Student pages originally mixed several unrelated navigation templates.
+    // Give every student page except the AdminLTE dashboard the same fixed
+    // portal navigation. This includes the profile and notifications pages.
+    const studentPage = window.location.pathname.includes('/pages/student/');
+    const studentDashboard = window.location.pathname.endsWith('/pages/student/dashboard.html');
+    if (studentPage && !studentDashboard) {
+        const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
+        const links = [
+            ['dashboard.html', 'fas fa-tachometer-alt', 'Dashboard'],
+            ['applications.html', 'fas fa-file-alt', 'My Applications'],
+            ['application-form.html', 'fas fa-plus-circle', 'New Application'],
+            ['placement.html', 'fas fa-briefcase', 'My Placement'],
+            ['profile.php', 'fas fa-user', 'My Profile'],
+            ['notifications.html', 'far fa-bell', 'Notifications']
+        ];
+        const navigation = document.createElement('aside');
+        navigation.className = 'student-shell-sidebar';
+        navigation.setAttribute('aria-label', 'Student navigation');
+        navigation.innerHTML = '<div class="student-shell-user"><i class="fas fa-user-circle" aria-hidden="true"></i><div><strong class="student-shell-name">Student Account</strong><small>Student</small></div></div>'
+            + links.map(function(link) {
+                const active = currentPage === link[0] || (currentPage === 'application-detail.html' && link[0] === 'applications.html');
+                return '<a class="student-shell-link' + (active ? ' active' : '') + '" href="' + link[0] + '"><i class="' + link[1] + '" aria-hidden="true"></i><span>' + link[2] + '</span></a>';
+            }).join('')
+            + '<a class="student-shell-link student-shell-logout" href="../../api/logout.php"><i class="fas fa-sign-out-alt" aria-hidden="true"></i><span>Logout</span></a>';
+
+        const topbar = document.createElement('header');
+        topbar.className = 'student-shell-topbar';
+        topbar.innerHTML = '<a class="student-shell-brand" href="dashboard.html"><i class="fas fa-graduation-cap me-2" aria-hidden="true"></i>FAMS</a><div class="student-shell-actions"><button class="student-shell-menu" type="button" aria-label="Toggle navigation" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button><a href="notifications.html" aria-label="Notifications"><i class="far fa-bell" aria-hidden="true"></i></a><a href="profile.php" aria-label="My profile"><i class="fas fa-user-circle" aria-hidden="true"></i></a></div>';
+        document.body.prepend(navigation);
+        document.body.prepend(topbar);
+        document.body.classList.add('student-shell-active');
+
+        const menuButton = topbar.querySelector('.student-shell-menu');
+        menuButton.addEventListener('click', function() {
+            const isOpen = navigation.classList.toggle('is-open');
+            menuButton.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        document.querySelectorAll('body > nav, .container-fluid > .row > nav.sidebar').forEach(function(element) {
+            element.classList.add('student-shell-original-nav');
+        });
+        document.querySelectorAll('main').forEach(function(main) {
+            main.classList.add('student-shell-content');
+        });
+
+        fetch('../../api/profile.php')
+            .then(function(response) { if (!response.ok) throw new Error('Profile unavailable'); return response.json(); })
+            .then(function(profile) {
+                const name = profile.full_name || 'Student Account';
+                document.querySelectorAll('.student-shell-name').forEach(function(element) { element.textContent = name; });
+            })
+            .catch(function() { /* Keep the neutral name when unavailable. */ });
+    }
+
     // Older dashboard templates linked their red Logout menu item directly to
     // the sign-in page. Route those links through the logout endpoint so the
     // server session is actually destroyed.
@@ -30,9 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
     
-    /* ============================================
-       FILE UPLOAD - Drag and Drop
-       ============================================ */
+
     
     // Find all upload areas on the page
     const uploadAreas = document.querySelectorAll('.file-upload');
@@ -290,8 +369,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // This function shows a popup message
     window.showToast = function(message, type) {
-        // Default type is 'info'
-        type = type || 'info';
+        // Use one FAMS blue for all feedback messages so notices are visually consistent.
+        type = 'primary';
         
         // Create the toast container if it doesn't exist
         let toastContainer = document.querySelector('#toast-container');

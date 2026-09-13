@@ -67,6 +67,11 @@
                                 <i class="fas fa-calendar-alt"></i> Application Windows
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="notifications.html">
+                                <i class="fas fa-bell"></i> Notifications
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </nav>
@@ -91,7 +96,7 @@
                         <select class="form-select form-select-sm d-inline-block w-auto">
                             <option>All Roles</option>
                             <option>Student</option>
-                            <option>Head of Department (HOD)</option>
+                            <option>HOD</option>
                             <option>Secretary</option>
                             <option>Organization Supervisor</option>
                             <option>Administrator</option>
@@ -113,38 +118,7 @@
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="usersTableBody">
-                                    <tr>
-                                        <td><strong>Alex Johnson</strong></td>
-                                        <td>alex.johnson@student.edu</td>
-                                        <td><span class="badge bg-primary">Student</span></td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
-                                            <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('Alex Johnson')"><i class="fas fa-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Dr. Sarah Mbeki</strong></td>
-                                        <td>sarah.mbeki@fams.edu</td>
-                                        <td><span class="badge bg-info">Head of Department (HOD)</span></td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
-                                            <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('Dr. Sarah Mbeki')"><i class="fas fa-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Mr. James Mwangi</strong></td>
-                                        <td>james.mwangi@fams.edu</td>
-                                        <td><span class="badge bg-warning">Secretary</span></td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
-                                            <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('Mr. James Mwangi')"><i class="fas fa-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                <tbody id="usersTableBody"></tbody>
                             </table>
                         </div>
                     </div>
@@ -163,6 +137,8 @@
                 </div>
                 <div class="modal-body">
                     <form id="userForm">
+                        <input type="hidden" name="action" value="create">
+                        <input type="hidden" name="user_id">
                         <div class="mb-3">
                             <label class="form-label">Full Name</label>
                             <input type="text" name="full_name" class="form-control" placeholder="Enter full name" required>
@@ -175,8 +151,17 @@
                             <label class="form-label">Role</label>
                             <select class="form-select" name="role_id" id="userRole" required><option value="">Loading roles…</option></select>
                         </div>
+                        <div class="mb-3 d-none" id="hodDepartmentGroup">
+                            <label class="form-label">HOD Department</label>
+                            <div class="form-text">Each department can have one active HOD.</div>
+                            <select class="form-select" name="department_id" id="hodDepartment"><option value="">Select department</option></select>
+                        </div>
+                        <div class="mb-3 d-none" id="supervisorDepartmentGroup">
+                            <label class="form-label">Organization Department</label>
+                            <select class="form-select" name="company_department_id" id="supervisorDepartment"><option value="">Select organization department</option></select>
+                        </div>
                         <div class="mb-3">
-                            <label class="form-label">Password</label>
+                            <label class="form-label">Password <span id="passwordHint">(at least 8 characters)</span></label>
                             <input type="password" name="password" class="form-control" placeholder="At least 8 characters" minlength="8" required>
                         </div>
                     </form>
@@ -196,28 +181,35 @@
             const body = document.getElementById('usersTableBody');
             const form = document.getElementById('userForm');
             const roleSelect = document.getElementById('userRole');
+            const hodGroup = document.getElementById('hodDepartmentGroup');
+            const supervisorGroup = document.getElementById('supervisorDepartmentGroup');
+            const hodDepartment = document.getElementById('hodDepartment');
+            const supervisorDepartment = document.getElementById('supervisorDepartment');
+            const modalElement = document.getElementById('addUserModal');
+            const modalTitle = modalElement.querySelector('.modal-title');
+            const submitButton = modalElement.querySelector('[type="submit"]');
+            const passwordInput = form.elements.password;
+            const users = new Map();
             const escape = function(value) { const node = document.createElement('span'); node.textContent = value || ''; return node.innerHTML; };
             const load = function() { fetch('../../api/admin-data.php?resource=users')
                 .then(function(response) { return response.json().then(function(data) { if (!response.ok) throw new Error(data.error || 'Unable to load users.'); return data; }); })
                 .then(function(data) {
                     body.innerHTML = data.items.map(function(item) {
-                        const active = item.status === 'active';
-                        const nextStatus = active ? 'suspended' : 'active';
-                        const label = active ? 'Suspend' : 'Activate';
-                        return '<tr><td><strong>' + escape(item.full_name) + '</strong></td><td>' + escape(item.email) + '</td><td><span class="badge bg-primary">' + escape(item.roles || 'No role') + '</span></td><td><span class="badge bg-' + (active ? 'success' : 'secondary') + '">' + escape(item.status) + '</span></td><td><button class="btn btn-sm btn-outline-secondary user-status" data-id="' + item.id + '" data-status="' + nextStatus + '">' + label + '</button></td></tr>';
+                        users.set(String(item.id), item);
+                        return '<tr><td><strong>' + escape(item.full_name) + '</strong>' + (item.department_name ? '<div class="small text-muted">' + escape(item.department_name) + '</div>' : '') + '</td><td>' + escape(item.email) + '</td><td><span class="badge bg-primary">' + escape(item.roles || 'No role') + '</span></td><td><span class="badge bg-success">Active</span></td><td class="text-nowrap"><button class="btn btn-sm btn-outline-primary user-edit" data-id="' + item.id + '"><i class="fas fa-edit"></i><span class="visually-hidden"> Edit</span></button> <button class="btn btn-sm btn-outline-danger user-status" data-id="' + item.id + '" data-status="suspended">Suspend</button></td></tr>';
                     }).join('') || '<tr><td colspan="5" class="text-center text-muted py-4">No users found.</td></tr>';
                 })
                 .catch(function() { body.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-4">Unable to load users.</td></tr>'; }); };
-            fetch('../../api/admin-data.php?resource=roles').then(function(response) { return response.json(); }).then(function(data) { roleSelect.innerHTML = '<option value="">Select role</option>' + data.items.map(function(role) { return '<option value="' + role.id + '">' + escape(role.name) + '</option>'; }).join(''); });
-            form.addEventListener('submit', function(event) { event.preventDefault(); if (!form.checkValidity()) { form.classList.add('was-validated'); return; } fetch('../../api/admin-data.php?resource=users', { method: 'POST', body: new URLSearchParams(new FormData(form)) }).then(function(response) { return response.json().then(function(data) { if (!response.ok) throw new Error(data.error); return data; }); }).then(function(data) { bootstrap.Modal.getInstance(document.getElementById('addUserModal')).hide(); form.reset(); showToast(data.message, 'success'); load(); }).catch(function(error) { showToast(error.message, 'danger'); }); });
-            body.addEventListener('click', function(event) { const button = event.target.closest('.user-status'); if (!button) return; fetch('../../api/admin-data.php?resource=users', { method: 'POST', body: new URLSearchParams({ action: 'set_status', user_id: button.dataset.id, status: button.dataset.status }) }).then(function(response) { return response.json().then(function(data) { if (!response.ok) throw new Error(data.error); return data; }); }).then(function(data) { showToast(data.message, 'success'); load(); }).catch(function(error) { showToast(error.message, 'danger'); }); });
+            fetch('../../api/admin-data.php?resource=roles').then(function(response) { return response.json(); }).then(function(data) { roleSelect.innerHTML = '<option value="">Select role</option>' + data.items.map(function(role) { return '<option value="' + role.id + '" data-role="' + escape(role.name) + '">' + escape(role.name) + '</option>'; }).join(''); });
+            fetch('../../api/admin-data.php?resource=departments').then(function(response) { return response.json(); }).then(function(data) { hodDepartment.innerHTML += data.items.map(function(item) { return '<option value="' + item.id + '">' + escape(item.name) + '</option>'; }).join(''); });
+            fetch('../../api/admin-data.php?resource=company_departments').then(function(response) { return response.json(); }).then(function(data) { supervisorDepartment.innerHTML += data.items.map(function(item) { return '<option value="' + item.id + '">' + escape(item.name) + '</option>'; }).join(''); });
+            const updateRoleFields = function() { const role = roleSelect.options[roleSelect.selectedIndex].dataset.role || ''; const isSupervisor = role === 'Organization Supervisor' || role === 'Organizational Supervisor'; hodGroup.classList.toggle('d-none', role !== 'Department Officer'); supervisorGroup.classList.toggle('d-none', !isSupervisor); hodDepartment.required = role === 'Department Officer'; supervisorDepartment.required = isSupervisor; };
+            roleSelect.addEventListener('change', updateRoleFields);
+            document.querySelector('[data-bs-target="#addUserModal"]').addEventListener('click', function() { form.reset(); form.classList.remove('was-validated'); form.elements.action.value = 'create'; form.elements.user_id.value = ''; passwordInput.required = true; modalTitle.innerHTML = '<i class="fas fa-user-plus me-2"></i>Add User'; submitButton.textContent = 'Add User'; updateRoleFields(); });
+            form.addEventListener('submit', function(event) { event.preventDefault(); if (!form.checkValidity()) { form.classList.add('was-validated'); return; } fetch('../../api/admin-data.php?resource=users', { method: 'POST', body: new URLSearchParams(new FormData(form)) }).then(function(response) { return response.json().then(function(data) { if (!response.ok) throw new Error(data.error); return data; }); }).then(function(data) { bootstrap.Modal.getInstance(modalElement).hide(); showToast(data.message, 'success'); load(); }).catch(function(error) { showToast(error.message, 'danger'); }); });
+            body.addEventListener('click', function(event) { const edit = event.target.closest('.user-edit'); if (edit) { const item = users.get(edit.dataset.id); if (!item) return; form.reset(); form.elements.action.value = 'update'; form.elements.user_id.value = item.id; form.elements.full_name.value = item.full_name; form.elements.email.value = item.email; roleSelect.value = Array.from(roleSelect.options).find(function(option) { return option.dataset.role === item.roles; })?.value || ''; updateRoleFields(); hodDepartment.value = item.department_id || ''; passwordInput.required = false; modalTitle.innerHTML = '<i class="fas fa-user-edit me-2"></i>Edit User'; submitButton.textContent = 'Save Changes'; bootstrap.Modal.getOrCreateInstance(modalElement).show(); return; } const button = event.target.closest('.user-status'); if (!button || !confirm('Suspend this user? They will no longer be able to sign in or appear in this list.')) return; fetch('../../api/admin-data.php?resource=users', { method: 'POST', body: new URLSearchParams({ action: 'set_status', user_id: button.dataset.id, status: button.dataset.status }) }).then(function(response) { return response.json().then(function(data) { if (!response.ok) throw new Error(data.error); return data; }); }).then(function(data) { showToast(data.message, 'success'); load(); }).catch(function(error) { showToast(error.message, 'danger'); }); });
             load();
         });
-        function confirmDelete(name) {
-            if (confirm('Are you sure you want to delete user: ' + name + '?')) {
-                showToast('User ' + name + ' deleted!', 'danger');
-            }
-        }
     </script>
 </body>
 </html>

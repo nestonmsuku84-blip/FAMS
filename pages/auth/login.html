@@ -9,69 +9,44 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/style.css">
 </head>
-<body class="hold-transition login-page">
-    <div class="login-box">
-        <div class="login-logo">
-            <!-- FIXED: Goes back to root index.html -->
-            <a href="../../index.html">
-                <i class="fas fa-graduation-cap me-2"></i>
-                <b>FAMS</b>
-            </a>
-        </div>
-        
-        <div class="card">
-            <div class="card-body login-card-body">
-                <p class="login-box-msg">Sign in to your account</p>
-
-                <!-- FIXED: Form action goes to student dashboard by default -->
-                <form action="../../api/login.php" method="POST">
-                    <div class="input-group mb-3">
-                        <input type="email" name="email" class="form-control" placeholder="Email Address" required>
-                        <div class="input-group-append">
-                            <span class="input-group-text">
-                                <i class="fas fa-envelope"></i>
-                            </span>
-                        </div>
+<body class="login-page landing-login">
+    <main class="container-fluid login-landing-shell">
+        <div class="row min-vh-100">
+            <section class="col-lg-7 login-landing-intro">
+                <div class="login-landing-copy">
+                    <a class="login-landing-brand" href="../../index.html"><i class="fas fa-graduation-cap me-2"></i>FAMS</a>
+                    <p class="login-landing-kicker">Field Attachment Management System</p>
+                    <h1>Make every field attachment easier to manage.</h1>
+                    <p class="login-landing-text">FAMS gives students, departments, and placement officers one secure place to apply, review applications, assign placements, and follow each step of the attachment journey.</p>
+                    <div class="login-landing-points">
+                        <p><i class="fas fa-check-circle"></i> Submit and track applications online</p>
+                        <p><i class="fas fa-check-circle"></i> Receive review and placement updates</p>
+                        <p><i class="fas fa-check-circle"></i> Keep all attachment information in one place</p>
                     </div>
-                    
-                    <div class="input-group mb-3">
-                        <input type="password" name="password" class="form-control" placeholder="Password" required>
-                        <div class="input-group-append">
-                            <span class="input-group-text">
-                                <i class="fas fa-lock"></i>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="rememberMe">
-                                <label class="form-check-label" for="rememberMe">Remember me</label>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <!-- FIXED: Button goes to student dashboard -->
-                            <button type="submit" class="btn btn-primary btn-block">
-                                <i class="fas fa-sign-in-alt me-2"></i>Sign In
-                            </button>
-                        </div>
-                    </div>
-                </form>
-
-                <div class="mt-3 text-center">
-                    <p class="mb-1">
-                        <a href="forgot-password.html">Forgot Password?</a>
-                    </p>
-                    <p class="mb-0">
-                        Don't have an account? 
-                        <a href="register.html" class="text-center">Register here</a>
-                    </p>
                 </div>
-            </div>
+            </section>
+            <section class="col-lg-5 d-flex align-items-center justify-content-center login-landing-form-panel">
+                <div class="login-box login-landing-card"><div class="card"><div class="card-body login-card-body p-4 p-md-5">
+                    <div class="text-center mb-4"><i class="fas fa-user-circle login-form-icon"></i><h2 class="h3 mt-2 mb-1">Welcome back</h2><p class="text-muted mb-0">Sign in to your FAMS account.</p></div>
+                    <div id="loginFeedback" class="alert d-none" role="alert"></div>
+                    <form action="../../api/login.php" method="POST">
+                        <div class="input-group mb-3"><input type="email" name="email" class="form-control" placeholder="Email Address" required><span class="input-group-text"><i class="fas fa-envelope"></i></span></div>
+                        <div class="input-group mb-3"><input type="password" name="password" class="form-control" placeholder="Password" required><span class="input-group-text"><i class="fas fa-lock"></i></span></div>
+                        <div class="form-check mb-3"><input type="checkbox" name="remember_me" class="form-check-input" id="rememberMe"><label class="form-check-label" for="rememberMe">Remember me</label></div>
+                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-sign-in-alt me-2"></i>Sign In</button>
+                    </form>
+                    <div class="mt-4 text-center"><p class="mb-2"><a href="forgot-password.html">Forgot Password?</a></p><p class="mb-0">Don't have an account? <a href="register.html">Register here</a></p></div>
+                </div></div></div>
+            </section>
         </div>
-    </div>
+    </main>
 
     <script src="../../js/script.js"></script>
+    <script>
+        const loginFeedback = document.getElementById('loginFeedback');
+        const loginParams = new URLSearchParams(window.location.search);
+        const messages = loginParams.has('verified') ? ['success', 'Email verified. You can now sign in.'] : loginParams.has('reset') ? ['success', 'Password reset successfully. Please sign in.'] : loginParams.get('error') === 'verify_email' ? ['warning', 'Verify your email using the link we sent before signing in.'] : loginParams.get('error') === 'invalid' ? ['danger', 'Invalid email or password.'] : loginParams.has('verify') ? ['info', 'Check your email for the verification link before signing in.'] : null;
+        if (messages) { loginFeedback.className = 'alert alert-' + messages[0]; loginFeedback.textContent = messages[1]; }
+    </script>
 </body>
 </html>

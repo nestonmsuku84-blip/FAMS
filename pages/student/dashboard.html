@@ -58,8 +58,7 @@
                             <i class="fas fa-cog mr-2"></i> Settings
                         </a>
                         <div class="dropdown-divider"></div>
-                        <!-- ✅ FIXED LOGOUT LINK -->
-                        <a href="../auth/login.html" class="dropdown-item text-danger">
+                        <a href="../../api/logout.php" class="dropdown-item text-danger">
                             <i class="fas fa-sign-out-alt mr-2"></i> Logout
                         </a>
                     </div>
@@ -112,15 +111,15 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="application-form.html#supporting-documents" class="nav-link">
-                                <i class="nav-icon fas fa-upload"></i>
-                                <p>Upload Documents</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a href="profile.php" class="nav-link">
                                 <i class="nav-icon fas fa-user"></i>
                                 <p>Profile</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../../api/logout.php" class="nav-link text-danger">
+                                <i class="nav-icon fas fa-sign-out-alt"></i>
+                                <p>Logout</p>
                             </a>
                         </li>
                     </ul>
@@ -296,21 +295,6 @@
             } catch (error) {
                 // Keep the neutral fallback when the profile cannot be loaded.
             }
-        });
-        document.addEventListener('DOMContentLoaded', async function () {
-            const body = document.getElementById('recentApplicationsTable');
-            const escape = function(value) { const node = document.createElement('span'); node.textContent = value || ''; return node.innerHTML; };
-            try {
-                const response = await fetch('../../api/application-data.php');
-                if (!response.ok) throw new Error('Unavailable');
-                const data = await response.json();
-                const apps = data.applications;
-                document.getElementById('totalApplications').textContent = apps.length;
-                document.getElementById('approvedApplications').textContent = apps.filter(function(app) { return app.status === 'approved'; }).length;
-                document.getElementById('pendingApplications').textContent = apps.filter(function(app) { return ['submitted', 'resubmitted', 'under_review', 'returned_for_correction'].includes(app.status); }).length;
-                document.getElementById('activePlacements').textContent = apps.filter(function(app) { return app.placement_status === 'confirmed'; }).length;
-                body.innerHTML = apps.slice(0, 5).map(function(app) { return '<tr><td><strong>' + escape(app.reference_number) + '</strong></td><td>' + escape(app.specialization_name || '—') + '</td><td>' + new Date((app.submitted_at || app.created_at).replace(' ', 'T')).toLocaleDateString() + '</td><td><span class="badge badge-secondary text-capitalize">' + escape(app.status.replace(/_/g, ' ')) + '</span></td><td><a href="application-detail.html?id=' + app.id + '" class="btn btn-sm btn-primary"><i class="fas fa-eye"></i></a></td></tr>'; }).join('') || '<tr><td colspan="5" class="text-center text-muted">No applications yet.</td></tr>';
-            } catch (error) { body.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Unable to load applications.</td></tr>'; }
         });
     </script>
 </body>
