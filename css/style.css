@@ -654,6 +654,10 @@ body.student-shell-active main.container.student-shell-content { max-width: 1140
     margin-right: 10px;
 }
 
+/* Role sidebars stay compact and consistently grouped. */
+.sidebar .position-sticky { padding-top: .75rem !important; }
+.sidebar .nav-link { padding-top: 9px; padding-bottom: 9px; margin-bottom: 2px; }
+
 .profile-photo { width: 76px; height: 76px; border: 3px solid #e2e8f0; border-radius: 50%; object-fit: cover; }
 .profile-photo-placeholder { font-size: 76px; color: #64748b; }
 

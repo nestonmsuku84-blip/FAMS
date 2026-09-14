@@ -33,12 +33,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="dashboard.html">
-                                <i class="fas fa-tachometer-alt"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="history.html">
                                 <i class="fas fa-history"></i> Review History
                             </a>
                         </li>
@@ -124,7 +119,7 @@
                 const response = await fetch('../../api/application-data.php');
                 if (!response.ok) throw new Error('Unavailable');
                 const data = await response.json();
-                const applications = data.applications.filter(function(app) { return ['submitted', 'resubmitted', 'under_review'].includes(app.status); });
+                const applications = data.applications.filter(function(app) { return ['submitted', 'resubmitted'].includes(app.status); });
                 body.innerHTML = applications.map(function(app) { return '<tr><td><strong>' + escapeHtml(app.reference_number) + '</strong></td><td>' + escapeHtml(app.student_name) + '</td><td>' + escapeHtml(app.specialization_name || 'Not selected') + '</td><td>' + new Date((app.submitted_at || app.created_at).replace(' ', 'T')).toLocaleDateString() + '</td><td><a href="review.html?id=' + app.id + '" class="btn btn-sm btn-primary"><i class="fas fa-check me-1"></i>Review</a></td></tr>'; }).join('') || '<tr><td colspan="5" class="text-center text-muted py-4">No applications are waiting for your review.</td></tr>';
             } catch (error) { body.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-4">Unable to load pending reviews.</td></tr>'; }
         });

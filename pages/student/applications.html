@@ -111,11 +111,11 @@
                 }
                 body.innerHTML = data.applications.map(function(app) {
                     const date = app.submitted_at || app.created_at;
-                    const status = app.status.replace(/_/g, ' ');
+                    const status = window.applicationStage ? window.applicationStage(app.status, app.placement_status) : app.status.replace(/_/g, ' ');
                     const target = app.status === 'draft' ? 'application-form.html?draft=' + app.id : 'application-detail.html?id=' + app.id;
                     const icon = app.status === 'draft' ? 'fa-pen' : 'fa-eye';
                     const label = app.status === 'draft' ? 'Edit draft' : 'View application';
-                    return '<tr><td><strong>' + escapeHtml(app.reference_number) + '</strong></td><td>' + escapeHtml(app.specialization_name || 'Not selected') + '</td><td>' + new Date(date.replace(' ', 'T')).toLocaleDateString() + '</td><td><span class="badge bg-secondary text-capitalize">' + escapeHtml(status) + '</span></td><td><a href="' + target + '" class="btn btn-sm btn-outline-primary" aria-label="' + label + '" title="' + label + '"><i class="fas ' + icon + '"></i><span class="visually-hidden">' + label + '</span></a></td></tr>';
+                    return '<tr><td><strong>' + escapeHtml(app.reference_number) + '</strong></td><td>' + escapeHtml(app.specialization_name || 'Not selected') + '</td><td>' + new Date(date.replace(' ', 'T')).toLocaleDateString() + '</td><td><span class="badge bg-primary">' + escapeHtml(status) + '</span></td><td><a href="' + target + '" class="btn btn-sm btn-outline-primary" aria-label="' + label + '" title="' + label + '"><i class="fas ' + icon + '"></i><span class="visually-hidden">' + label + '</span></a></td></tr>';
                 }).join('');
             } catch (error) {
                 body.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-4">Unable to load applications.</td></tr>';

@@ -4,6 +4,20 @@
 
 // "Wait for the page to fully load, then run this code"
 document.addEventListener('DOMContentLoaded', function() {
+    // The same workflow labels are used wherever applications are listed.
+    // A placement is the final operational stage after FAMS approval.
+    window.applicationStage = function(status, placementStatus) {
+        if (placementStatus && placementStatus !== 'cancelled') return 'Placement ' + String(placementStatus).replace(/_/g, ' ');
+        return {
+            draft: 'Draft',
+            submitted: 'Department review',
+            resubmitted: 'Department review',
+            under_review: 'FAMS final review',
+            returned_for_correction: 'Correction required',
+            approved: 'Ready for placement',
+            rejected: 'Closed — rejected'
+        }[status] || String(status || 'Unknown').replace(/_/g, ' ');
+    };
 
     // Add the same rich-text editor to every standard FAMS textarea. Pages
     // with a tailored editor can opt out using data-tinymce-ready.
@@ -31,6 +45,34 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('submit', function() {
         if (window.tinymce) window.tinymce.triggerSave();
     }, true);
+
+    // Keep the office navigation identical on every secretary page.
+    if (window.location.pathname.includes('/pages/secretary/')) {
+        const current = window.location.pathname.split('/').pop() || 'dashboard.html';
+        const active = current === 'review.html' ? 'all-applications.html' : current;
+        const links = [['dashboard.html', 'fas fa-tachometer-alt', 'Dashboard'], ['all-applications.html', 'fas fa-file-alt', 'All Applications'], ['placements.html', 'fas fa-briefcase', 'Placements'], ['notifications.html', 'fas fa-bell', 'Notifications'], ['../profile.php', 'fas fa-user-circle', 'My Profile']];
+        document.querySelectorAll('nav.sidebar ul.nav').forEach(function(menu) {
+            menu.innerHTML = links.map(function(link) { return '<li class="nav-item"><a class="nav-link' + (link[0] === active ? ' active' : '') + '" href="' + link[0] + '"><i class="' + link[1] + '"></i> ' + link[2] + '</a></li>'; }).join('') + '<li class="nav-item mt-3"><a class="nav-link text-danger" href="../../api/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>';
+        });
+        fetch('../../api/notifications.php').then(function(response) { return response.ok ? response.json() : null; }).then(function(data) {
+            if (!data) return;
+            document.querySelectorAll('.fa-bell').forEach(function(icon) {
+                const badge = icon.parentElement.querySelector('.badge');
+                if (badge) { badge.textContent = data.unread_count; badge.classList.toggle('d-none', data.unread_count === 0); }
+            });
+        }).catch(function() {});
+    }
+
+    // HOD pages also share one fixed menu. This prevents older templates from
+    // reintroducing duplicate Dashboard entries on the review queue.
+    if (window.location.pathname.includes('/pages/hod/')) {
+        const current = window.location.pathname.split('/').pop() || 'dashboard.html';
+        const active = current === 'review.html' ? 'pending-reviews.html' : current;
+        const links = [['dashboard.html', 'fas fa-tachometer-alt', 'Dashboard'], ['pending-reviews.html', 'fas fa-file-alt', 'Pending Reviews'], ['history.html', 'fas fa-history', 'Review History'], ['notifications.html', 'fas fa-bell', 'Notifications'], ['../profile.php', 'fas fa-user-circle', 'My Profile']];
+        document.querySelectorAll('nav.sidebar ul.nav').forEach(function(menu) {
+            menu.innerHTML = links.map(function(link) { return '<li class="nav-item"><a class="nav-link' + (link[0] === active ? ' active' : '') + '" href="' + link[0] + '"><i class="' + link[1] + '"></i> ' + link[2] + '</a></li>'; }).join('') + '<li class="nav-item mt-3"><a class="nav-link text-danger" href="../../api/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>';
+        });
+    }
 
     // Student pages originally mixed several unrelated navigation templates.
     // Give every student page except the AdminLTE dashboard the same fixed
@@ -271,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (pagePath.includes('/pages/admin/dashboard.html')) {
-        Promise.all(['users', 'institutions', 'companies', 'specializations'].map(function(resource) {
+        Promise.all(['users', 'institutions', 'specializations'].map(function(resource) {
             return fetch('../../api/admin-data.php?resource=' + resource).then(function(response) { if (!response.ok) throw new Error('Unavailable'); return response.json(); });
         })).then(function(results) {
             document.querySelectorAll('.stat-card .number').forEach(function(element, index) {

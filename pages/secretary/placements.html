@@ -26,6 +26,9 @@
                         <span id="dashboardUserName">Secretary Account</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="../profile.php"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                            <li><a class="dropdown-item" href="notifications.html"><i class="fas fa-bell me-2"></i>Notifications</a></li>
+                            <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item text-danger" href="../auth/login.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                         </ul>
                     </li>
@@ -39,11 +42,8 @@
             <nav class="col-md-3 col-lg-2 d-md-block sidebar">
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="dashboard.html">
-                                <i class="fas fa-tachometer-alt"></i> Dashboard
-                            </a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../profile.php"><i class="fas fa-user-circle"></i> My Profile</a></li>
                         <li class="nav-item">
                             <a class="nav-link" href="all-applications.html">
                                 <i class="fas fa-file-alt"></i> All Applications
@@ -66,9 +66,7 @@
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Placements</h1>
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#assignPlacementModal">
-                        <i class="fas fa-plus me-2"></i>Create Placement
-                    </button>
+                    <div class="d-flex gap-2"><button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addSupervisorModal"><i class="fas fa-user-plus me-2"></i>Add Supervisor</button><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#assignPlacementModal"><i class="fas fa-plus me-2"></i>Create Placement</button></div>
                 </div>
 
                 <!-- Stats -->
@@ -89,12 +87,6 @@
                         <div class="stat-card">
                             <div class="number text-primary" id="placementCount">0</div>
                             <div class="label">Completed</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="number text-info" id="companyCount">0</div>
-                            <div class="label">Companies</div>
                         </div>
                     </div>
                 </div>
@@ -148,7 +140,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="assignPlacementModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Assign Placement</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><form id="placementForm"><div class="modal-body"><div class="mb-3"><label class="form-label">Approved Application</label><select class="form-select" name="application_id" id="placementApplication" required><option value="">Loading applications…</option></select></div><div class="mb-3"><label class="form-label">Company</label><select class="form-select" name="company_id" id="placementCompany" required><option value="">Select company…</option></select></div><div class="mb-3"><label class="form-label">Department</label><select class="form-select" name="department_id" id="placementDepartment" required disabled><option value="">Select department…</option></select></div><div class="mb-3"><label class="form-label">Supervisor</label><select class="form-select" name="supervisor_id" id="placementSupervisor" required disabled><option value="">Select supervisor…</option></select></div><div class="row"><div class="col-md-6 mb-3"><label class="form-label">Start Date</label><input type="date" class="form-control" name="placement_start_date"></div><div class="col-md-6 mb-3"><label class="form-label">End Date</label><input type="date" class="form-control" name="placement_end_date"></div></div><div class="mb-3"><label class="form-label">Notes</label><textarea class="form-control" name="notes" rows="2"></textarea></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-success">Assign Placement</button></div></form></div></div></div>
+    <div class="modal fade" id="assignPlacementModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Assign Placement</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><form id="placementForm"><div class="modal-body"><div class="mb-3"><label class="form-label">Approved Application</label><select class="form-select" name="application_id" id="placementApplication" required><option value="">Loading applications…</option></select></div><div class="mb-3"><label class="form-label">Department</label><select class="form-select" name="department_id" id="placementDepartment" required disabled><option value="">Select department…</option></select></div><div class="mb-3"><label class="form-label">Supervisor</label><select class="form-select" name="supervisor_id" id="placementSupervisor" required disabled><option value="">Select supervisor…</option></select></div><div class="row"><div class="col-md-6 mb-3"><label class="form-label">Start Date</label><input type="date" class="form-control" name="placement_start_date"></div><div class="col-md-6 mb-3"><label class="form-label">End Date</label><input type="date" class="form-control" name="placement_end_date"></div></div><div class="mb-3"><label class="form-label">Notes</label><textarea class="form-control" name="notes" rows="2"></textarea></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-success">Assign Placement</button></div></form></div></div></div>
+    <div class="modal fade" id="addSupervisorModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Add Supervisor</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><form id="supervisorForm"><div class="modal-body"><input type="hidden" name="action" value="create_supervisor"><div class="mb-3"><label class="form-label">Full name</label><input class="form-control" name="full_name" required></div><div class="mb-3"><label class="form-label">Department</label><select class="form-select" name="department_id" id="supervisorDepartment" required><option value="">Loading departments…</option></select></div><div class="mb-3"><label class="form-label">Email</label><input class="form-control" type="email" name="email"></div><div class="mb-3"><label class="form-label">Phone number</label><input class="form-control" name="phone_number"></div><div class="mb-3"><label class="form-label">Position</label><input class="form-control" name="position" placeholder="e.g. Senior Developer"></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button><button class="btn btn-primary">Save Supervisor</button></div></form></div></div></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../js/script.js"></script>
@@ -156,11 +149,12 @@
         document.addEventListener('DOMContentLoaded', function() {
             const body = document.getElementById('placementsTableBody');
             const form = document.getElementById('placementForm');
+            const supervisorForm = document.getElementById('supervisorForm');
             const application = document.getElementById('placementApplication');
-            const company = document.getElementById('placementCompany');
             const department = document.getElementById('placementDepartment');
             const supervisor = document.getElementById('placementSupervisor');
-            let options = { applications: [], companies: [], departments: [], supervisors: [] };
+            const supervisorDepartment = document.getElementById('supervisorDepartment');
+            let options = { applications: [], departments: [], supervisors: [] };
             const escape = function(value) { const node = document.createElement('span'); node.textContent = value || ''; return node.innerHTML; };
             const fill = function(select, items, label) { select.innerHTML = '<option value="">Select ' + label + '…</option>'; items.forEach(function(item) { const option = document.createElement('option'); option.value = item.id; option.textContent = item.name || item.full_name || (item.reference_number + ' — ' + item.student_name); select.appendChild(option); }); select.disabled = items.length === 0; };
             const load = async function() {
@@ -171,14 +165,14 @@
                     document.getElementById('placementCount').textContent = list.placements.length;
                     document.getElementById('confirmedCount').textContent = list.placements.filter(function(item) { return item.status === 'confirmed'; }).length;
                     document.getElementById('pendingCount').textContent = list.placements.filter(function(item) { return item.status === 'pending'; }).length;
-                    document.getElementById('companyCount').textContent = options.companies.length;
                     body.innerHTML = list.placements.map(function(item) { return '<tr><td><strong>' + escape(item.student_name) + '</strong></td><td>' + escape(item.company_name) + '</td><td>' + escape(item.supervisor_name) + '</td><td>' + escape(item.placement_start_date || '—') + '</td><td><span class="badge bg-' + (item.status === 'confirmed' ? 'success' : 'warning') + ' text-capitalize">' + escape(item.status) + '</span></td><td>' + escape(item.reference_number) + '</td></tr>'; }).join('') || '<tr><td colspan="6" class="text-center text-muted py-4">No placements assigned yet.</td></tr>';
-                    fill(application, options.applications, 'application'); fill(company, options.companies, 'company');
+                    fill(application, options.applications, 'application'); fill(department, options.departments, 'department'); fill(supervisorDepartment, options.departments, 'department');
+                    if (!options.supervisors.length) showToast('Placement setup is incomplete: add an active supervisor for the host company before assigning a student.', 'warning');
                 } catch (error) { body.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Unable to load placements.</td></tr>'; }
             };
-            company.addEventListener('change', function() { fill(department, options.departments.filter(function(item) { return String(item.company_id) === company.value; }), 'department'); fill(supervisor, [], 'supervisor'); });
             department.addEventListener('change', function() { fill(supervisor, options.supervisors.filter(function(item) { return String(item.company_department_id) === department.value; }), 'supervisor'); });
             form.addEventListener('submit', async function(event) { event.preventDefault(); try { const response = await fetch('../../api/placement-data.php', { method: 'POST', body: new URLSearchParams(new FormData(form)) }); const data = await response.json(); if (!response.ok) throw new Error(data.error || 'Unable to assign placement.'); bootstrap.Modal.getInstance(document.getElementById('assignPlacementModal')).hide(); form.reset(); showToast(data.message, 'success'); load(); } catch (error) { showToast(error.message, 'danger'); } });
+            supervisorForm.addEventListener('submit', async function(event) { event.preventDefault(); try { const response = await fetch('../../api/placement-data.php', { method: 'POST', body: new URLSearchParams(new FormData(supervisorForm)) }); const data = await response.json(); if (!response.ok) throw new Error(data.error || 'Unable to save supervisor.'); bootstrap.Modal.getInstance(document.getElementById('addSupervisorModal')).hide(); supervisorForm.reset(); showToast(data.message, 'success'); load(); } catch (error) { showToast(error.message, 'danger'); } });
             load();
         });
     </script>

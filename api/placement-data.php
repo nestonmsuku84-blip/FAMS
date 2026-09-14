@@ -20,26 +20,52 @@ try {
         $mode = $_GET['mode'] ?? 'list';
         if ($mode === 'options') {
             $applications = $pdo->query("SELECT a.id, a.reference_number, u.full_name AS student_name, s.name AS specialization_name FROM applications a JOIN student_profiles sp ON sp.id = a.student_id JOIN users u ON u.id = sp.user_id LEFT JOIN application_specializations aps ON aps.application_id = a.id AND aps.priority_order = 1 LEFT JOIN specializations s ON s.id = aps.specialization_id LEFT JOIN placements p ON p.application_id = a.id WHERE a.status = 'approved' AND p.id IS NULL ORDER BY a.decision_at DESC")->fetchAll();
-            $companies = $pdo->query('SELECT id, name FROM companies WHERE is_active = TRUE ORDER BY name')->fetchAll();
-            $departments = $pdo->query('SELECT id, company_id, name FROM company_departments WHERE is_active = TRUE ORDER BY name')->fetchAll();
-            $supervisors = $pdo->query('SELECT id, company_id, company_department_id, full_name, email, phone_number FROM supervisors WHERE is_active = TRUE ORDER BY full_name')->fetchAll();
-            placementResponse(['applications' => $applications, 'companies' => $companies, 'departments' => $departments, 'supervisors' => $supervisors]);
+            // FAMS is configured for one host company. The company is selected
+            // by the system, never by the secretary.
+            $company = $pdo->query('SELECT id, name FROM companies WHERE is_active = TRUE ORDER BY id LIMIT 1')->fetch();
+            if (!$company) placementResponse(['error' => 'No active host company is configured. Ask the administrator to configure the company first.'], 422);
+            $departments = $pdo->prepare('SELECT id, company_id, name FROM company_departments WHERE is_active = TRUE AND company_id = ? ORDER BY name');
+            $departments->execute([$company['id']]);
+            $supervisors = $pdo->prepare('SELECT id, company_id, company_department_id, full_name, email, phone_number FROM supervisors WHERE is_active = TRUE AND company_id = ? ORDER BY full_name');
+            $supervisors->execute([$company['id']]);
+            placementResponse(['applications' => $applications, 'company_name' => $company['name'], 'departments' => $departments->fetchAll(), 'supervisors' => $supervisors->fetchAll()]);
         }
         $placements = $pdo->query('SELECT p.id, p.status, p.placement_start_date, p.placement_end_date, p.notes, a.reference_number, u.full_name AS student_name, c.name AS company_name, cd.name AS department_name, s.full_name AS supervisor_name FROM placements p JOIN applications a ON a.id = p.application_id JOIN student_profiles sp ON sp.id = a.student_id JOIN users u ON u.id = sp.user_id JOIN companies c ON c.id = p.company_id JOIN company_departments cd ON cd.id = p.company_department_id JOIN supervisors s ON s.id = p.supervisor_id ORDER BY p.assigned_at DESC')->fetchAll();
         placementResponse(['placements' => $placements]);
     }
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') placementResponse(['error' => 'Method not allowed.'], 405);
+    if (($_POST['action'] ?? '') === 'create_supervisor') {
+        $fullName = trim($_POST['full_name'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $phone = trim($_POST['phone_number'] ?? '');
+        $position = trim($_POST['position'] ?? '');
+        $departmentId = filter_var($_POST['department_id'] ?? null, FILTER_VALIDATE_INT);
+        if ($fullName === '' || !$departmentId) placementResponse(['error' => 'Supervisor name and department are required.'], 422);
+        if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) placementResponse(['error' => 'Enter a valid supervisor email address.'], 422);
+        $pdo->beginTransaction();
+        $company = $pdo->query('SELECT id FROM companies WHERE is_active = TRUE ORDER BY id LIMIT 1 FOR UPDATE')->fetch();
+        if (!$company) throw new RuntimeException('No active host company is configured.');
+        $department = $pdo->prepare('SELECT id FROM company_departments WHERE id = ? AND company_id = ? AND is_active = TRUE');
+        $department->execute([$departmentId, $company['id']]);
+        if (!$department->fetchColumn()) throw new RuntimeException('Choose a department from the host company.');
+        $insert = $pdo->prepare('INSERT INTO supervisors (company_id, company_department_id, full_name, email, phone_number, position, is_active) VALUES (?, ?, ?, ?, ?, ?, TRUE)');
+        $insert->execute([$company['id'], $departmentId, $fullName, $email ?: null, $phone ?: null, $position ?: null]);
+        $pdo->commit();
+        placementResponse(['message' => 'Supervisor added. You can now assign a placement.'], 201);
+    }
     $applicationId = filter_var($_POST['application_id'] ?? null, FILTER_VALIDATE_INT);
-    $companyId = filter_var($_POST['company_id'] ?? null, FILTER_VALIDATE_INT);
     $departmentId = filter_var($_POST['department_id'] ?? null, FILTER_VALIDATE_INT);
     $supervisorId = filter_var($_POST['supervisor_id'] ?? null, FILTER_VALIDATE_INT);
     $start = trim($_POST['placement_start_date'] ?? '');
     $end = trim($_POST['placement_end_date'] ?? '');
     $notes = trim($_POST['notes'] ?? '');
-    if (!$applicationId || !$companyId || !$departmentId || !$supervisorId) placementResponse(['error' => 'Choose an application, company, department, and supervisor.'], 422);
+    if (!$applicationId || !$departmentId || !$supervisorId) placementResponse(['error' => 'Choose an application, department, and supervisor.'], 422);
     if (($start !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $start)) || ($end !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $end)) || ($start !== '' && $end !== '' && $end < $start)) placementResponse(['error' => 'Provide valid placement dates.'], 422);
 
     $pdo->beginTransaction();
+    $company = $pdo->query('SELECT id FROM companies WHERE is_active = TRUE ORDER BY id LIMIT 1 FOR UPDATE')->fetch();
+    if (!$company) throw new RuntimeException('No active host company is configured.');
+    $companyId = (int)$company['id'];
     $application = $pdo->prepare("SELECT a.id, sp.user_id AS student_user_id FROM applications a JOIN student_profiles sp ON sp.id = a.student_id LEFT JOIN placements p ON p.application_id = a.id WHERE a.id = ? AND a.status = 'approved' AND p.id IS NULL FOR UPDATE");
     $application->execute([$applicationId]);
     $student = $application->fetch();
