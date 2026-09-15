@@ -46,6 +46,26 @@ document.addEventListener('DOMContentLoaded', function() {
         if (window.tinymce) window.tinymce.triggerSave();
     }, true);
 
+    // Every signed-in role uses the same inbox endpoint. Add a live unread
+    // indicator to any notification link, including administrator and
+    // organizational-supervisor pages that do not use the student shell.
+    fetch('../../api/notifications.php')
+        .then(function(response) { if (!response.ok) throw new Error('Unavailable'); return response.json(); })
+        .then(function(data) {
+            document.querySelectorAll('a[href$="notifications.html"], a[href$="notifications.php"]').forEach(function(link) {
+                link.classList.add('position-relative');
+                let badge = link.querySelector('.notification-unread-badge');
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'badge rounded-pill bg-danger notification-unread-badge ms-1';
+                    link.appendChild(badge);
+                }
+                badge.textContent = data.unread_count;
+                badge.classList.toggle('d-none', Number(data.unread_count) === 0);
+            });
+        })
+        .catch(function() { /* Public pages and unavailable sessions have no inbox. */ });
+
     // Keep the office navigation identical on every secretary page.
     if (window.location.pathname.includes('/pages/secretary/')) {
         const current = window.location.pathname.split('/').pop() || 'dashboard.html';
@@ -75,8 +95,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Student pages originally mixed several unrelated navigation templates.
-    // Give every student page except the AdminLTE dashboard the same fixed
-    // portal navigation. This includes the profile and notifications pages.
+    // Give every student page except the dedicated AdminLTE dashboard one
+    // fixed portal navigation.
     const studentPage = window.location.pathname.includes('/pages/student/');
     const studentDashboard = window.location.pathname.endsWith('/pages/student/dashboard.html');
     if (studentPage && !studentDashboard) {
@@ -86,8 +106,8 @@ document.addEventListener('DOMContentLoaded', function() {
             ['applications.html', 'fas fa-file-alt', 'My Applications'],
             ['application-form.html', 'fas fa-plus-circle', 'New Application'],
             ['placement.html', 'fas fa-briefcase', 'My Placement'],
-            ['profile.php', 'fas fa-user', 'My Profile'],
-            ['notifications.html', 'far fa-bell', 'Notifications']
+            ['notifications.html', 'far fa-bell', 'Notifications'],
+            ['profile.php', 'fas fa-user', 'Profile']
         ];
         const navigation = document.createElement('aside');
         navigation.className = 'student-shell-sidebar';

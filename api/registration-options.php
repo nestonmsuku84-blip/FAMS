@@ -6,11 +6,12 @@ header('Content-Type: application/json; charset=utf-8');
 
 try {
     $pdo = db();
-    $organization = $pdo->query('SELECT id, name FROM institutions WHERE is_active = TRUE ORDER BY id LIMIT 1')->fetch();
+    $institutions = $pdo->query('SELECT id, name FROM institutions WHERE is_active = TRUE ORDER BY name')->fetchAll();
+    $institutionId = filter_var($_GET['institution_id'] ?? null, FILTER_VALIDATE_INT) ?: (int)($institutions[0]['id'] ?? 0);
     $programmes = [];
-    if ($organization) { $stmt = $pdo->prepare('SELECT id, name FROM programmes_of_study WHERE is_active = TRUE AND institution_id = ? ORDER BY name'); $stmt->execute([$organization['id']]); $programmes = $stmt->fetchAll(); }
+    if ($institutionId) { $stmt = $pdo->prepare('SELECT id, name FROM programmes_of_study WHERE is_active = TRUE AND institution_id = ? ORDER BY name'); $stmt->execute([$institutionId]); $programmes = $stmt->fetchAll(); }
     echo json_encode([
-        'institutions' => $organization ? [$organization] : [],
+        'institutions' => $institutions,
         'programmes' => $programmes,
         'levels' => $pdo->query('SELECT id, name FROM levels_of_education ORDER BY name')->fetchAll(),
         'nationalities' => $pdo->query('SELECT id, name FROM nationalities ORDER BY name')->fetchAll(),

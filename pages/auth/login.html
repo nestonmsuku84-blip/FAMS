@@ -35,7 +35,7 @@
                         <div class="form-check mb-3"><input type="checkbox" name="remember_me" class="form-check-input" id="rememberMe"><label class="form-check-label" for="rememberMe">Remember me</label></div>
                         <button type="submit" class="btn btn-primary w-100"><i class="fas fa-sign-in-alt me-2"></i>Sign In</button>
                     </form>
-                    <div class="mt-4 text-center"><p class="mb-2"><a href="forgot-password.html">Forgot Password?</a></p><p class="mb-0">Don't have an account? <a href="register.html">Register here</a></p></div>
+                    <div class="mt-4 text-center"><p class="mb-2"><a href="forgot-password.php">Forgot Password?</a></p><p class="mb-0">Don't have an account? <a href="register.html">Register here</a></p></div>
                 </div></div></div>
             </section>
         </div>
@@ -45,7 +45,7 @@
     <script>
         const loginFeedback = document.getElementById('loginFeedback');
         const loginParams = new URLSearchParams(window.location.search);
-        const messages = loginParams.has('verified') ? ['success', 'Email verified. You can now sign in.'] : loginParams.has('reset') ? ['success', 'Password reset successfully. Please sign in.'] : loginParams.get('error') === 'verify_email' ? ['warning', 'Verify your email using the link we sent before signing in.'] : loginParams.get('error') === 'invalid' ? ['danger', 'Invalid email or password.'] : loginParams.has('verify') ? ['info', 'Check your email for the verification link before signing in.'] : null;
+        const messages = loginParams.has('registered') ? ['success', 'Registration successful. You can now sign in.'] : loginParams.has('reset') ? ['success', 'Password reset successfully. Please sign in.'] : loginParams.get('error') === 'invalid' ? ['danger', 'Invalid email or password.'] : null;
         if (messages) { loginFeedback.className = 'alert alert-' + messages[0]; loginFeedback.textContent = messages[1]; }
     </script>
 </body>

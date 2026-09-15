@@ -70,13 +70,17 @@ try {
     $application->execute([$applicationId]);
     $student = $application->fetch();
     if (!$student) throw new RuntimeException('This application is not available for placement.');
-    $validAssignment = $pdo->prepare('SELECT 1 FROM company_departments cd JOIN supervisors s ON s.company_id = cd.company_id AND s.company_department_id = cd.id WHERE cd.id = ? AND cd.company_id = ? AND cd.is_active = TRUE AND s.id = ? AND s.is_active = TRUE');
+    $validAssignment = $pdo->prepare('SELECT s.user_id FROM company_departments cd JOIN supervisors s ON s.company_id = cd.company_id AND s.company_department_id = cd.id WHERE cd.id = ? AND cd.company_id = ? AND cd.is_active = TRUE AND s.id = ? AND s.is_active = TRUE');
     $validAssignment->execute([$departmentId, $companyId, $supervisorId]);
-    if (!$validAssignment->fetchColumn()) throw new RuntimeException('The selected company, department, and supervisor do not match.');
+    $supervisorUserId = $validAssignment->fetchColumn();
+    if ($supervisorUserId === false) throw new RuntimeException('The selected company, department, and supervisor do not match.');
     $insert = $pdo->prepare("INSERT INTO placements (application_id, company_id, company_department_id, supervisor_id, placement_start_date, placement_end_date, status, assigned_by, notes) VALUES (?, ?, ?, ?, ?, ?, 'confirmed', ?, ?)");
     $insert->execute([$applicationId, $companyId, $departmentId, $supervisorId, $start ?: null, $end ?: null, user()['id'], $notes ?: null]);
-    $notice = $pdo->prepare('INSERT INTO notifications (user_id, application_id, type, subject, message) VALUES (?, ?, ?, ?, ?)');
+    $notice = $pdo->prepare("INSERT INTO notifications (user_id, application_id, type, channel, subject, message, is_read) VALUES (?, ?, ?, 'in_system', ?, ?, FALSE)");
     $notice->execute([$student['student_user_id'], $applicationId, 'placement_assigned', 'Placement assigned', 'Your placement has been assigned. Open My Placement to view the details.']);
+    if ($supervisorUserId !== null) {
+        $notice->execute([(int)$supervisorUserId, $applicationId, 'placement_assigned', 'Student placement assigned', 'A student has been assigned to your organization. Sign in to FAMS for placement details.']);
+    }
     $pdo->commit();
     placementResponse(['message' => 'Placement assigned and the student has been notified.'], 201);
 } catch (RuntimeException $error) {

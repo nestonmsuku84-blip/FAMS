@@ -24,25 +24,11 @@
             </ul>
 
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
+                <li class="nav-item">
+                    <a class="nav-link position-relative" href="notifications.html" aria-label="Notifications">
                         <i class="far fa-bell"></i>
-                        <span class="badge badge-warning navbar-badge">3</span>
+                        <span class="badge badge-warning navbar-badge notification-unread-badge d-none">0</span>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-header">3 Notifications</span>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-check-circle text-success mr-2"></i> Application FAMS-2024-001 approved
-                            <span class="float-right text-muted text-sm">2 hours</span>
-                        </a>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-clock text-warning mr-2"></i> FAMS-2024-002 under review
-                            <span class="float-right text-muted text-sm">1 day</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">View All</a>
-                    </div>
                 </li>
                 
                 <li class="nav-item dropdown">
@@ -92,7 +78,7 @@
                                 <p>Dashboard</p>
                             </a>
                         </li>
-                <li class="nav-item">
+                        <li class="nav-item">
                             <a href="applications.html" class="nav-link">
                                 <i class="nav-icon fas fa-file-alt"></i>
                                 <p>My Applications</p>
@@ -108,6 +94,12 @@
                             <a href="placement.html" class="nav-link">
                                 <i class="nav-icon fas fa-briefcase"></i>
                                 <p>My Placement</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="notifications.html" class="nav-link position-relative">
+                                <i class="nav-icon far fa-bell"></i>
+                                <p>Notifications</p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -132,14 +124,8 @@
             <section class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-6">
+                        <div class="col-12">
                             <h1>Student Dashboard</h1>
-                        </div>
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="../../index.html">Home</a></li>
-                                <li class="breadcrumb-item active">Dashboard</li>
-                            </ol>
                         </div>
                     </div>
                 </div>
@@ -149,7 +135,7 @@
                 <div class="container-fluid">
                     <!-- Stats Cards -->
                     <div class="row">
-                        <div class="col-lg-3 col-6">
+                        <div class="col-6 col-md-3">
                             <div class="small-box bg-info">
                                 <div class="inner">
                                     <h3 id="totalApplications">0</h3>
@@ -163,7 +149,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-6">
+                        <div class="col-6 col-md-3">
                             <div class="small-box bg-success">
                                 <div class="inner">
                                     <h3 id="approvedApplications">0</h3>
@@ -177,7 +163,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-6">
+                        <div class="col-6 col-md-3">
                             <div class="small-box bg-warning">
                                 <div class="inner">
                                     <h3 id="pendingApplications">0</h3>
@@ -191,7 +177,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-6">
+                        <div class="col-6 col-md-3">
                             <div class="small-box bg-primary">
                                 <div class="inner">
                                     <h3 id="activePlacements">0</h3>

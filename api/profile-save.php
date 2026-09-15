@@ -26,9 +26,6 @@ if ($registrationNumber === '' || !in_array($gender, ['male', 'female'], true) |
 
 try {
     $pdo = db();
-    $organizationId = (int)$pdo->query('SELECT id FROM institutions WHERE is_active = TRUE ORDER BY id LIMIT 1')->fetchColumn();
-    if (!$organizationId) throw new RuntimeException('The organization has not been configured.');
-    $institutionId = $organizationId;
     $validProfileValues = $pdo->prepare(
         'SELECT 1
          FROM institutions i

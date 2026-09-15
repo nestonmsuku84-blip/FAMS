@@ -78,7 +78,7 @@ try {
     }
     $reference = $pdo->prepare('SELECT reference_number FROM applications WHERE id = ?'); $reference->execute([$applicationId]); $reference = (string)$reference->fetchColumn();
     $reviewers = $pdo->prepare('SELECT DISTINCT user_id FROM department_officer_scopes WHERE specialization_id = ?'); $reviewers->execute([$specialization]);
-    $notice = $pdo->prepare('INSERT INTO notifications (user_id, application_id, type, subject, message) VALUES (?, ?, ?, ?, ?)');
+    $notice = $pdo->prepare("INSERT INTO notifications (user_id, application_id, type, channel, subject, message, is_read) VALUES (?, ?, ?, 'in_system', ?, ?, FALSE)");
     foreach ($reviewers->fetchAll(PDO::FETCH_COLUMN) as $reviewer) $notice->execute([$reviewer, $applicationId, 'application_submitted', 'New application awaiting review', "A new application ($reference) is ready for department review."]);
     $notice->execute([$current['id'], $applicationId, 'application_submitted', 'Application submitted successfully', 'Your application was submitted successfully. Please wait for the result.']);
     $pdo->commit();
