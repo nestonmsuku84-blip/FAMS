@@ -168,5 +168,21 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const main = document.querySelector('main');
+            try {
+                const response = await fetch('../../api/dashboard-data.php');
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Unable to load review summary.');
+                const s = data.statuses || {};
+                const pending = Number(s.submitted || 0) + Number(s.resubmitted || 0);
+                const approved = Number(s.under_review || 0) + Number(s.approved || 0);
+                const rejected = Number(s.rejected || 0);
+                const total = pending + approved + rejected + Number(s.returned_for_correction || 0);
+                main.innerHTML = '<div class="d-flex justify-content-between flex-wrap align-items-center pt-3 pb-2 mb-3 border-bottom"><h1 class="h2">Review Summary</h1><span class="badge bg-info">Current applications</span></div><div class="row g-4 mb-4"><div class="col-md-3"><div class="stat-card"><div class="number">' + total + '</div><div class="label">Applications in Scope</div></div></div><div class="col-md-3"><div class="stat-card"><div class="number text-success">' + approved + '</div><div class="label">Moved Forward</div></div></div><div class="col-md-3"><div class="stat-card"><div class="number text-danger">' + rejected + '</div><div class="label">Rejected</div></div></div><div class="col-md-3"><div class="stat-card"><div class="number text-warning">' + pending + '</div><div class="label">Awaiting Review</div></div></div></div><div class="card"><div class="card-header">Application Status Distribution</div><div class="card-body"><div class="row text-center"><div class="col-md-3"><strong>' + Number(s.submitted || 0) + '</strong><div class="small text-muted">Submitted</div></div><div class="col-md-3"><strong>' + Number(s.resubmitted || 0) + '</strong><div class="small text-muted">Resubmitted</div></div><div class="col-md-3"><strong>' + Number(s.returned_for_correction || 0) + '</strong><div class="small text-muted">Needs correction</div></div><div class="col-md-3"><strong>' + Number(s.under_review || 0) + '</strong><div class="small text-muted">In final review</div></div></div></div></div><a href="dashboard.html" class="btn btn-outline-secondary mt-3">Back to Dashboard</a>';
+            } catch (error) { main.innerHTML = '<div class="alert alert-danger mt-4">Unable to load review summary.</div>'; }
+        });
+    </script>
 </body>
 </html>

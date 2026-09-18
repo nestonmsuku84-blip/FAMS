@@ -52,7 +52,7 @@ try {
         requireRole('Student');
         $applicationId = filter_var($_GET['id'] ?? null, FILTER_VALIDATE_INT);
         if (!$applicationId) respond(['error' => 'A valid draft id is required.'], 422);
-        $draft = $pdo->prepare("SELECT a.*, aps.specialization_id $base AND a.id = ? AND a.status = 'draft'");
+        $draft = $pdo->prepare("SELECT a.*, aps.specialization_id $base AND a.id = ? AND a.status IN ('draft', 'returned_for_correction')");
         $draft->execute([...$params, $applicationId]);
         $item = $draft->fetch();
         if (!$item) respond(['error' => 'Draft not found.'], 404);

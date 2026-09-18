@@ -42,15 +42,12 @@ try {
         $history->execute([(int)$current['id']]);
         $result['review_history'] = $history->fetchAll();
     }
-
     if ($role === 'student') {
         $placement = $pdo->prepare('SELECT p.id, p.status, c.name AS company_name FROM placements p JOIN applications a ON a.id = p.application_id JOIN student_profiles sp ON sp.id = a.student_id JOIN companies c ON c.id = p.company_id WHERE sp.user_id = ? ORDER BY p.assigned_at DESC LIMIT 1');
         $placement->execute([(int)$current['id']]);
         $result['placement'] = $placement->fetch() ?: null;
     }
-    if (in_array($role, ['fams officer', 'administrator'], true)) {
-        $result['placements_confirmed'] = (int)$pdo->query("SELECT COUNT(*) FROM placements WHERE status = 'confirmed'")->fetchColumn();
-    }
+    if (in_array($role, ['fams officer', 'administrator'], true)) $result['placements_confirmed'] = (int)$pdo->query("SELECT COUNT(*) FROM placements WHERE status = 'confirmed'")->fetchColumn();
     dashboardResponse($result);
 } catch (Throwable $error) {
     dashboardResponse(['error' => 'Dashboard data is unavailable.'], 500);

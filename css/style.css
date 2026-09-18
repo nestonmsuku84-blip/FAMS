@@ -662,9 +662,10 @@ body.student-shell-active main.container.student-shell-content { max-width: 1140
 .profile-photo-placeholder { font-size: 76px; color: #64748b; }
 
 .fams-landing { min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1d4ed8 58%, #0891b2); }
-/* Keep the role dashboards' navigation in view while their content scrolls. */
+/* Keep every role's standard sidebar in view while its page content scrolls.
+   The AdminLTE student dashboard provides its own fixed `.main-sidebar`. */
 @media (min-width: 769px) {
-    .container-fluid > .row > .sidebar {
+    .sidebar:not(.main-sidebar) {
         position: sticky;
         top: 0;
         align-self: flex-start;
@@ -672,10 +673,6 @@ body.student-shell-active main.container.student-shell-content { max-width: 1140
         overflow-y: auto;
     }
 }
-
-.secretary-static-sidebar { position: sticky; top: 0; height: 100vh; overflow-y: auto; align-self: flex-start; }
-
-
 
 .table-responsive {
     border-radius: 10px;

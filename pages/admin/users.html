@@ -24,7 +24,7 @@
                             <i class="fas fa-user-circle me-1"></i> Admin
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item text-danger" href="../auth/login.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            <li><a class="dropdown-item text-danger" href="../../api/logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -190,7 +190,40 @@
                 .then(function(response) { return response.json().then(function(data) { if (!response.ok) throw new Error(data.error || 'Unable to load users.'); return data; }); })
                 .then(function(data) {
                     body.innerHTML = data.items.map(function(item) {
-                        users.set(String(item.id), item);
+              -- Past Windows -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <i class="fas fa-history me-2"></i>Past Windows
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Open Date</th>
+                                        <th>Close Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pastWindowsTable">
+                                    <tr>
+                                        <td>Semester 1 - 2023</td>
+                                        <td>Jan 15, 2023</td>
+                                        <td>Feb 28, 2023</td>
+                                        <td><span class="badge bg-secondary">Closed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Semester 2 - 2023</td>
+                                        <td>Jul 15, 2023</td>
+                                        <td>Aug 30, 2023</td>
+                                        <td><span class="badge bg-secondary">Closed</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
                         return '<tr><td><strong>' + escape(item.full_name) + '</strong>' + (item.department_name ? '<div class="small text-muted">' + escape(item.department_name) + '</div>' : '') + '</td><td>' + escape(item.email) + '</td><td><span class="badge bg-primary">' + escape(item.roles || 'No role') + '</span></td><td><span class="badge bg-success">Active</span></td><td class="text-nowrap"><button class="btn btn-sm btn-outline-primary user-edit" data-id="' + item.id + '"><i class="fas fa-edit"></i><span class="visually-hidden"> Edit</span></button> <button class="btn btn-sm btn-outline-danger user-status" data-id="' + item.id + '" data-status="suspended">Suspend</button></td></tr>';
                     }).join('') || '<tr><td colspan="5" class="text-center text-muted py-4">No users found.</td></tr>';
                 })

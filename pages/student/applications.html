@@ -24,7 +24,7 @@
                             <i class="fas fa-user-circle me-1"></i> <span class="student-user-name">Student Account</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item text-danger" href="../auth/login.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            <li><a class="dropdown-item text-danger" href="../../api/logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -112,9 +112,10 @@
                 body.innerHTML = data.applications.map(function(app) {
                     const date = app.submitted_at || app.created_at;
                     const status = window.applicationStage ? window.applicationStage(app.status, app.placement_status) : app.status.replace(/_/g, ' ');
-                    const target = app.status === 'draft' ? 'application-form.html?draft=' + app.id : 'application-detail.html?id=' + app.id;
-                    const icon = app.status === 'draft' ? 'fa-pen' : 'fa-eye';
-                    const label = app.status === 'draft' ? 'Edit draft' : 'View application';
+                    const editable = ['draft', 'returned_for_correction'].includes(app.status);
+                    const target = editable ? 'application-form.html?draft=' + app.id : 'application-detail.html?id=' + app.id;
+                    const icon = editable ? 'fa-pen' : 'fa-eye';
+                    const label = editable ? (app.status === 'draft' ? 'Edit draft' : 'Correct and resubmit') : 'View application';
                     return '<tr><td><strong>' + escapeHtml(app.reference_number) + '</strong></td><td>' + escapeHtml(app.specialization_name || 'Not selected') + '</td><td>' + new Date(date.replace(' ', 'T')).toLocaleDateString() + '</td><td><span class="badge bg-primary">' + escapeHtml(status) + '</span></td><td><a href="' + target + '" class="btn btn-sm btn-outline-primary" aria-label="' + label + '" title="' + label + '"><i class="fas ' + icon + '"></i><span class="visually-hidden">' + label + '</span></a></td></tr>';
                 }).join('');
             } catch (error) {

@@ -63,29 +63,7 @@
                                         <th>Status</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><strong>FAMS-2024-001</strong></td>
-                                        <td>Mary Joseph</td>
-                                        <td><span class="badge bg-success">Approved</span></td>
-                                        <td>2024-01-18</td>
-                                        <td><span class="badge-status completed">Completed</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>FAMS-2024-002</strong></td>
-                                        <td>David Kim</td>
-                                        <td><span class="badge bg-danger">Rejected</span></td>
-                                        <td>2024-01-20</td>
-                                        <td><span class="badge-status completed">Completed</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>FAMS-2024-003</strong></td>
-                                        <td>Sarah John</td>
-                                        <td><span class="badge bg-warning">Needs Correction</span></td>
-                                        <td>2024-01-22</td>
-                                        <td><span class="badge-status pending">Pending</span></td>
-                                    </tr>
-                                </tbody>
+                                <tbody id="reviewHistoryTable"><tr><td colspan="5" class="text-center text-muted py-4">Loading review history…</td></tr></tbody>
                             </table>
                         </div>
                     </div>
@@ -102,5 +80,18 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const body = document.getElementById('reviewHistoryTable');
+            const escape = value => { const node = document.createElement('span'); node.textContent = value || '—'; return node.innerHTML; };
+            try {
+                const response = await fetch('../../api/dashboard-data.php?mode=history');
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Unable to load review history.');
+                const rows = data.review_history || [];
+                body.innerHTML = rows.map(row => '<tr><td><strong>' + escape(row.reference_number) + '</strong></td><td>' + escape(row.student_name) + '</td><td class="text-capitalize">' + escape(row.decision.replace(/_/g, ' ')) + '</td><td>' + escape(row.completed_at) + '</td><td class="text-capitalize">' + escape(row.status) + '</td></tr>').join('') || '<tr><td colspan="5" class="text-center text-muted py-4">You have not completed any reviews.</td></tr>';
+            } catch (error) { body.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-4">Unable to load review history.</td></tr>'; }
+        });
+    </script>
 </body>
 </html>

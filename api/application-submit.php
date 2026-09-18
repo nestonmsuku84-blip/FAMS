@@ -35,7 +35,7 @@ if ($action === 'draft') {
     if (!validTrainingDates($reportingDate, $trainingEndDate, false) || !datesAreWithinApplicationPeriod($reportingDate, $trainingEndDate, $window)) failApplication('Enter dates on or after the application window opens. The training end date cannot be before the reporting date.');
     $applicationId = filter_var($_POST['application_id'] ?? null, FILTER_VALIDATE_INT);
     if ($applicationId) {
-        $draft = $pdo->prepare("SELECT id FROM applications WHERE id = ? AND student_id = ? AND status = 'draft'"); $draft->execute([$applicationId, $studentId]);
+        $draft = $pdo->prepare("SELECT id FROM applications WHERE id = ? AND student_id = ? AND status IN ('draft', 'returned_for_correction')"); $draft->execute([$applicationId, $studentId]);
         if (!$draft->fetchColumn()) failApplication('This draft is no longer available for editing.', 404);
         $pdo->prepare("UPDATE applications SET application_window_id = ?, skill_level = ?, interest_statement = ?, reason_for_application = ?, expected_learning_objectives = ?, reporting_date = ?, training_end_date = ? WHERE id = ?")
             ->execute([$window['id'], in_array($skillLevel, ['beginner','intermediate','advanced'], true) ? $skillLevel : 'beginner', $interest, $reason, $objectives, $reportingDate ?: null, $trainingEndDate ?: null, $applicationId]);
@@ -58,14 +58,20 @@ $window = currentWindow($pdo); if (!$window) failApplication('There is no active
 if (!$specialization || !in_array($skillLevel, ['beginner','intermediate','advanced'], true) || !$interest || !$reason || !$objectives || !isset($_POST['declaration']) || !validTrainingDates($reportingDate, $trainingEndDate, true) || !datesAreWithinApplicationPeriod($reportingDate, $trainingEndDate, $window)) failApplication('Please complete all required application fields. Both training dates must be on or after the application window opens, and the end date cannot be before the reporting date.');
 $check = $pdo->prepare('SELECT id FROM specializations WHERE id = ? AND is_active = TRUE'); $check->execute([$specialization]); if (!$check->fetchColumn()) failApplication('Please select an active specialization.');
 
-$pdo->beginTransaction(); $files = []; $uploadDir = null;
+$pdo->beginTransaction(); $files = []; $previousFiles = []; $uploadDir = null;
 try {
-    $draft = $pdo->prepare("SELECT id FROM applications WHERE id = ? AND student_id = ? AND status = 'draft' FOR UPDATE"); $draft->execute([$applicationId, $studentId]);
-    if (!$draft->fetchColumn()) throw new RuntimeException('Only a saved draft can be submitted.');
-    $pdo->prepare("UPDATE applications SET application_window_id = ?, skill_level = ?, interest_statement = ?, reason_for_application = ?, expected_learning_objectives = ?, reporting_date = ?, training_end_date = ?, declaration_accepted = 1, status = 'submitted', submitted_at = NOW() WHERE id = ?")
-        ->execute([$window['id'], $skillLevel, $interest, $reason, $objectives, $reportingDate, $trainingEndDate, $applicationId]);
+    $draft = $pdo->prepare("SELECT status FROM applications WHERE id = ? AND student_id = ? AND status IN ('draft', 'returned_for_correction') FOR UPDATE"); $draft->execute([$applicationId, $studentId]);
+    $previousStatus = $draft->fetchColumn();
+    if (!$previousStatus) throw new RuntimeException('Only a saved draft or returned application can be submitted.');
+    $submittedStatus = $previousStatus === 'returned_for_correction' ? 'resubmitted' : 'submitted';
+    $pdo->prepare("UPDATE applications SET application_window_id = ?, skill_level = ?, interest_statement = ?, reason_for_application = ?, expected_learning_objectives = ?, reporting_date = ?, training_end_date = ?, declaration_accepted = 1, status = ?, submitted_at = NOW() WHERE id = ?")
+        ->execute([$window['id'], $skillLevel, $interest, $reason, $objectives, $reportingDate, $trainingEndDate, $submittedStatus, $applicationId]);
     $pdo->prepare('DELETE FROM application_specializations WHERE application_id = ?')->execute([$applicationId]);
     $pdo->prepare('INSERT INTO application_specializations (application_id, specialization_id, priority_order) VALUES (?, ?, 1)')->execute([$applicationId, $specialization]);
+    $existingDocuments = $pdo->prepare('SELECT file_path FROM application_documents WHERE application_id = ? FOR UPDATE');
+    $existingDocuments->execute([$applicationId]);
+    $previousFiles = $existingDocuments->fetchAll(PDO::FETCH_COLUMN);
+    $pdo->prepare('DELETE FROM application_documents WHERE application_id = ?')->execute([$applicationId]);
     $uploadDir = dirname(__DIR__) . '/uploads/' . $applicationId;
     if (!is_dir($uploadDir) && !mkdir($uploadDir, 0750, true) && !is_dir($uploadDir)) throw new RuntimeException('Unable to create upload directory.');
     $allowed = ['application_letter' => ['application/pdf' => 'pdf'], 'student_id' => ['image/jpeg' => 'jpg', 'image/png' => 'png'], 'university_introduction_letter' => ['application/pdf' => 'pdf']];
@@ -77,11 +83,28 @@ try {
         $pdo->prepare('INSERT INTO application_documents (application_id, document_type, file_path, original_filename, file_format, mime_type, file_size_bytes, validation_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')->execute([$applicationId, $field, 'uploads/' . $applicationId . '/' . $file, basename($_FILES[$field]['name']), $types[$mime], $mime, $_FILES[$field]['size'], 'pending']);
     }
     $reference = $pdo->prepare('SELECT reference_number FROM applications WHERE id = ?'); $reference->execute([$applicationId]); $reference = (string)$reference->fetchColumn();
-    $reviewers = $pdo->prepare('SELECT DISTINCT user_id FROM department_officer_scopes WHERE specialization_id = ?'); $reviewers->execute([$specialization]);
+    $reviewers = $pdo->prepare("SELECT DISTINCT dos.user_id FROM department_officer_scopes dos JOIN users u ON u.id = dos.user_id WHERE dos.specialization_id = ? AND u.status = 'active'");
+    $reviewers->execute([$specialization]);
+    $reviewerIds = $reviewers->fetchAll(PDO::FETCH_COLUMN);
+    $routedToFams = !$reviewerIds;
+    if ($routedToFams) {
+        $pdo->prepare("UPDATE applications SET status = 'under_review' WHERE id = ?")->execute([$applicationId]);
+        $famsOfficers = $pdo->query("SELECT DISTINCT u.id FROM users u JOIN user_roles ur ON ur.user_id = u.id JOIN roles r ON r.id = ur.role_id WHERE r.name = 'FAMS Officer' AND u.status = 'active'")->fetchAll(PDO::FETCH_COLUMN);
+        if (!$famsOfficers) throw new RuntimeException('No active department reviewer or FAMS Officer is assigned to receive this application.');
+        $reviewerIds = $famsOfficers;
+    }
     $notice = $pdo->prepare("INSERT INTO notifications (user_id, application_id, type, channel, subject, message, is_read) VALUES (?, ?, ?, 'in_system', ?, ?, FALSE)");
-    foreach ($reviewers->fetchAll(PDO::FETCH_COLUMN) as $reviewer) $notice->execute([$reviewer, $applicationId, 'application_submitted', 'New application awaiting review', "A new application ($reference) is ready for department review."]);
-    $notice->execute([$current['id'], $applicationId, 'application_submitted', 'Application submitted successfully', 'Your application was submitted successfully. Please wait for the result.']);
+    $reviewSubject = $routedToFams ? 'New application awaiting final review' : 'New application awaiting department review';
+    $reviewMessage = $routedToFams ? "A new application ($reference) has no assigned department reviewer and is ready for final review." : "A new application ($reference) is ready for department review.";
+    foreach ($reviewerIds as $reviewer) $notice->execute([$reviewer, $applicationId, 'application_submitted', $reviewSubject, $reviewMessage]);
+    $studentMessage = $routedToFams ? 'Your application was submitted and has been sent for final review.' : 'Your application was submitted successfully. Please wait for the result.';
+    $notice->execute([$current['id'], $applicationId, 'application_submitted', 'Application submitted successfully', $studentMessage]);
     $pdo->commit();
+    foreach ($previousFiles as $previousFile) {
+        $path = realpath(dirname(__DIR__) . '/' . $previousFile);
+        $uploadRoot = realpath(dirname(__DIR__) . '/uploads');
+        if ($uploadRoot && $path && str_starts_with($path, $uploadRoot . DIRECTORY_SEPARATOR) && is_file($path)) unlink($path);
+    }
     if (wantsJson()) {
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode(['message' => 'Application submitted successfully. Please wait for the result.', 'redirect' => '../pages/student/applications.html?submitted=1']);

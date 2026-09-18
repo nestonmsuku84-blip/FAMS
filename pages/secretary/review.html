@@ -27,7 +27,7 @@
                             <li><a class="dropdown-item" href="../profile.php"><i class="fas fa-user me-2"></i>My Profile</a></li>
                             <li><a class="dropdown-item" href="notifications.html"><i class="fas fa-bell me-2"></i>Notifications</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="../auth/login.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            <li><a class="dropdown-item text-danger" href="../../api/logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -181,13 +181,22 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../js/script.js"></script>
     <script>
-        const applicationId = new URLSearchParams(window.location.search).get('id');
-        if (!applicationId) {
-            document.querySelector('form button[type="submit"]').disabled = true;
-            showToast('Choose an application from the application list first.', 'warning');
-        } else {
-            document.getElementById('applicationId').value = applicationId;
-        }
+        document.addEventListener('DOMContentLoaded', async function() {
+            const main = document.querySelector('main');
+            const id = new URLSearchParams(location.search).get('id');
+            const escape = value => { const node = document.createElement('span'); node.textContent = value || '—'; return node.innerHTML; };
+            if (!id) { main.innerHTML = '<div class="alert alert-warning mt-4">Choose an application from <a href="all-applications.html">All Applications</a>.</div>'; return; }
+            try {
+                const response = await fetch('../../api/application-data.php?mode=detail&id=' + encodeURIComponent(id));
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Unable to load application.');
+                const app = data.application;
+                if (app.status !== 'under_review') throw new Error('This application is not awaiting final review.');
+                const docs = data.documents.map(doc => '<li class="list-group-item d-flex justify-content-between"><span>' + escape(doc.original_filename) + '</span><a class="btn btn-sm btn-outline-primary" target="_blank" href="../../api/document-download.php?id=' + doc.id + '">View</a></li>').join('') || '<li class="list-group-item text-muted">No documents uploaded.</li>';
+                const departmentReview = data.reviews.filter(review => review.stage === 'department').map(review => '<p><strong>Department decision:</strong> ' + escape(review.decision.replace(/_/g, ' ')) + '<br><span class="text-muted small">' + escape(review.reviewer_name) + (review.review_comment ? ': ' + escape(review.review_comment) : '') + '</span></p>').join('') || '<p class="text-muted">No department review is recorded.</p>';
+                main.innerHTML = '<div class="d-flex justify-content-between flex-wrap align-items-center pt-3 pb-2 mb-3 border-bottom"><div><h1 class="h2">FAMS Review</h1><p class="text-muted mb-0">Reference: <strong>' + escape(app.reference_number) + '</strong></p></div><span class="badge bg-warning">Awaiting Final Review</span></div><div class="row"><div class="col-md-8"><div class="card mb-4"><div class="card-header">Application Summary</div><div class="card-body"><p><strong>Student:</strong> ' + escape(app.student_name) + ' (' + escape(app.registration_number) + ')</p><p><strong>Email:</strong> ' + escape(app.student_email) + '</p><p><strong>Specialization:</strong> ' + escape(app.specialization_name) + '</p><p><strong>Skill level:</strong> ' + escape(app.skill_level) + '</p>' + departmentReview + '</div></div><div class="card mb-4"><div class="card-header">Application Content</div><div class="card-body"><h6>Interest Statement</h6><p>' + escape(app.interest_statement) + '</p><h6>Reason for Application</h6><p>' + escape(app.reason_for_application) + '</p><h6>Learning Objectives</h6><p>' + escape(app.expected_learning_objectives) + '</p></div></div><div class="card"><div class="card-header">Supporting Documents</div><ul class="list-group list-group-flush">' + docs + '</ul></div></div><div class="col-md-4"><div class="card"><div class="card-header">FAMS Decision</div><div class="card-body"><form action="../../api/review-submit.php" method="POST"><input type="hidden" name="application_id" value="' + app.id + '"><div class="mb-3"><div class="form-check"><input type="radio" name="decision" id="famsApprove" value="approved" class="form-check-input" required><label class="form-check-label text-success" for="famsApprove">Approve</label></div><div class="form-check"><input type="radio" name="decision" id="famsReject" value="rejected" class="form-check-input"><label class="form-check-label text-danger" for="famsReject">Reject</label></div><div class="form-check"><input type="radio" name="decision" id="famsCorrection" value="needs_correction" class="form-check-input"><label class="form-check-label text-warning" for="famsCorrection">Needs Correction</label></div></div><label class="form-label fw-bold" for="famsComment">FAMS Comment</label><textarea class="form-control mb-3" id="famsComment" name="comment" rows="4"></textarea><button class="btn btn-primary w-100">Submit Final Decision</button><a href="all-applications.html" class="btn btn-outline-secondary w-100 mt-2">Back</a></form></div></div></div></div>';
+            } catch (error) { main.innerHTML = '<div class="alert alert-danger mt-4">' + escape(error.message) + '</div><a class="btn btn-outline-secondary" href="all-applications.html">Back</a>'; }
+        });
     </script>
 </body>
 </html>
